@@ -425,3 +425,34 @@ remove_action( 'wp_print_styles', 'print_emoji_styles' );
  * Performance optimization: Remove WordPress version
  */
 remove_action( 'wp_head', 'wp_generator' );
+
+/**
+ * Flush rewrite rules on theme activation
+ */
+function profamr_flush_rewrite_rules() {
+    // Register custom post types and taxonomies
+    profamr_register_wiki_post_type();
+    profamr_register_tools_post_type();
+    profamr_register_wiki_category_taxonomy();
+    profamr_register_wiki_tags_taxonomy();
+    profamr_register_tool_type_taxonomy();
+
+    // Flush rewrite rules
+    flush_rewrite_rules();
+}
+add_action( 'after_switch_theme', 'profamr_flush_rewrite_rules' );
+
+/**
+ * Fallback menu for primary navigation
+ */
+function profamr_fallback_menu() {
+    echo '<ul>';
+    echo '<li><a href="' . esc_url( home_url( '/' ) ) . '">' . esc_html__( 'Home', 'profamr' ) . '</a></li>';
+    echo '<li><a href="' . esc_url( home_url( '/wiki/' ) ) . '">' . esc_html__( 'Wiki', 'profamr' ) . '</a></li>';
+    echo '<li><a href="' . esc_url( home_url( '/tools/' ) ) . '">' . esc_html__( 'Tools', 'profamr' ) . '</a></li>';
+    wp_list_pages( array(
+        'title_li' => '',
+        'depth'    => 1,
+    ) );
+    echo '</ul>';
+}
