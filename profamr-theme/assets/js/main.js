@@ -384,3 +384,59 @@
     }
 
 })();
+
+/**
+ * Date/Time Display in Top Bar
+ */
+function initDateTime() {
+    const dateTimeElement = document.getElementById('current-date-time');
+    
+    if (!dateTimeElement) {
+        return;
+    }
+
+    function updateDateTime() {
+        const now = new Date();
+        const options = { 
+            day: '2-digit', 
+            month: 'long', 
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+        const dateTimeString = now.toLocaleDateString('pt-BR', options);
+        dateTimeElement.textContent = dateTimeString;
+    }
+
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+}
+
+// Add to init function
+document.addEventListener('DOMContentLoaded', function() {
+    initDateTime();
+});
+
+/**
+ * Sidebar Process Guide Toggle
+ */
+function initSidebarToggle() {
+    const toggles = document.querySelectorAll('.menu-item-toggle');
+    
+    toggles.forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            this.classList.toggle('active');
+            const submenu = this.nextElementSibling;
+            if (submenu && submenu.classList.contains('sidebar-left-submenu')) {
+                submenu.classList.toggle('active');
+            }
+        });
+    });
+}
+
+// Update init
+document.addEventListener('DOMContentLoaded', function() {
+    initDateTime();
+    initSidebarToggle();
+});

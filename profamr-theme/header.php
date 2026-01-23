@@ -13,6 +13,27 @@
 <div id="page" class="site-container">
     <a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'profamr' ); ?></a>
 
+    <!-- Top Bar with Date/Time -->
+    <div class="top-bar">
+        <div class="top-bar-inner">
+            <div class="top-bar-date">
+                <span id="current-date-time"></span>
+            </div>
+            <div class="top-bar-social">
+                <?php
+                $github    = get_theme_mod( 'profamr_github', '#' );
+                $twitter   = get_theme_mod( 'profamr_twitter', '#' );
+                $linkedin  = get_theme_mod( 'profamr_linkedin', '#' );
+                $instagram = get_theme_mod( 'profamr_instagram', '#' );
+                ?>
+                <a href="<?php echo esc_url( $github ); ?>" target="_blank" aria-label="GitHub">📖</a>
+                <a href="<?php echo esc_url( $twitter ); ?>" target="_blank" aria-label="Twitter">𝕏</a>
+                <a href="<?php echo esc_url( $linkedin ); ?>" target="_blank" aria-label="LinkedIn">in</a>
+                <a href="<?php echo esc_url( $instagram ); ?>" target="_blank" aria-label="Instagram">📷</a>
+            </div>
+        </div>
+    </div>
+
     <header id="masthead" class="site-header">
         <div class="header-inner">
             <div class="site-branding">
@@ -67,11 +88,46 @@
                 );
                 ?>
 
-                <div class="header-search">
-                    <?php get_search_form(); ?>
-                </div>
             </nav>
         </div>
     </header>
+
+    <!-- News Ticker -->
+    <?php
+    $recent_posts = new WP_Query( array(
+        'posts_per_page' => 5,
+        'post_status'    => 'publish',
+    ) );
+
+    if ( $recent_posts->have_posts() ) :
+        ?>
+        <div class="news-ticker-wrapper">
+            <div class="news-ticker-label">
+                📰 NEWS
+            </div>
+            <div class="news-ticker-content">
+                <div class="news-ticker-items">
+                    <?php
+                    // Duplicate for infinite scroll
+                    for ( $i = 0; $i < 2; $i++ ) :
+                        $recent_posts->rewind_posts();
+                        while ( $recent_posts->have_posts() ) :
+                            $recent_posts->the_post();
+                            ?>
+                            <div class="news-ticker-item">
+                                <span class="news-ticker-date"><?php echo esc_html( human_time_diff( get_the_time( 'U' ), current_time( 'timestamp' ) ) ) . ' ' . __( 'Ago', 'profamr' ); ?></span>
+                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                            </div>
+                            <?php
+                        endwhile;
+                    endfor;
+                    wp_reset_postdata();
+                    ?>
+                </div>
+            </div>
+        </div>
+        <?php
+    endif;
+    ?>
 
     <main id="primary" class="site-content">
