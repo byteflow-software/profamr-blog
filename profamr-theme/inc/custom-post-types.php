@@ -59,7 +59,7 @@ function profamr_register_wiki_post_type() {
         'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'revisions', 'page-attributes', 'custom-fields' ),
     );
 
-    register_post_type( 'wiki', $args );
+    register_post_type( 'yada_wiki', $args );
 }
 add_action( 'init', 'profamr_register_wiki_post_type' );
 
@@ -117,7 +117,7 @@ function profamr_wiki_custom_columns( $columns ) {
     );
     return $columns;
 }
-add_filter( 'manage_wiki_posts_columns', 'profamr_wiki_custom_columns' );
+add_filter( 'manage_yada_wiki_posts_columns', 'profamr_wiki_custom_columns' );
 
 /**
  * Display custom column content
@@ -142,7 +142,7 @@ function profamr_wiki_custom_column_content( $column, $post_id ) {
             break;
     }
 }
-add_action( 'manage_wiki_posts_custom_column', 'profamr_wiki_custom_column_content', 10, 2 );
+add_action( 'manage_yada_wiki_posts_custom_column', 'profamr_wiki_custom_column_content', 10, 2 );
 
 /**
  * Make custom columns sortable
@@ -151,4 +151,4 @@ function profamr_wiki_sortable_columns( $columns ) {
     $columns['wiki_category'] = 'wiki_category';
     return $columns;
 }
-add_filter( 'manage_edit-wiki_sortable_columns', 'profamr_wiki_sortable_columns' );
+add_filter( 'manage_edit-yada_wiki_sortable_columns', 'profamr_wiki_sortable_columns' );

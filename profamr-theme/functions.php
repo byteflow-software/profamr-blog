@@ -102,7 +102,7 @@ function profamr_widgets_init() {
 
     register_sidebar( array(
         'name'          => __( 'Wiki Sidebar', 'profamr' ),
-        'id'            => 'sidebar-wiki',
+        'id'            => 'sidebar-yada_wiki',
         'description'   => __( 'Add widgets here to appear in wiki pages.', 'profamr' ),
         'before_widget' => '<section id="%1$s" class="widget %2$s">',
         'after_widget'  => '</section>',
@@ -214,7 +214,7 @@ function profamr_body_classes( $classes ) {
     }
 
     // Add class for wiki pages
-    if ( is_singular( 'wiki' ) || is_post_type_archive( 'wiki' ) ) {
+    if ( is_singular( 'yada_wiki' ) || is_post_type_archive( 'yada_wiki' ) ) {
         $classes[] = 'wiki-page';
     }
 
@@ -226,7 +226,7 @@ add_filter( 'body_class', 'profamr_body_classes' );
  * Add post state for wiki pages in admin
  */
 function profamr_display_post_states( $post_states, $post ) {
-    if ( 'wiki' === get_post_type( $post ) ) {
+    if ( 'yada_wiki' === get_post_type( $post ) ) {
         $post_states[] = __( 'Wiki', 'profamr' );
     }
     return $post_states;

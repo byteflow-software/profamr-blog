@@ -22,14 +22,14 @@ get_header();
             if ( have_posts() ) :
 
                 // Check if we're displaying wiki posts
-                $is_wiki = is_post_type_archive( 'wiki' ) || ( is_tax() && get_queried_object()->taxonomy === 'wiki_category' );
+                $is_wiki = is_post_type_archive( 'yada_wiki' ) || ( is_tax() && get_queried_object()->taxonomy === 'wiki_category' );
 
                 if ( $is_wiki ) {
                     ?>
                     <header class="archive-header">
                         <h1 class="archive-title">
                             <?php
-                            if ( is_post_type_archive( 'wiki' ) ) {
+                            if ( is_post_type_archive( 'yada_wiki' ) ) {
                                 echo esc_html__( 'Wiki', 'profamr' );
                             } else {
                                 single_term_title();

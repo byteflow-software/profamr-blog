@@ -44,7 +44,7 @@ function profamr_register_wiki_category_taxonomy() {
         'show_in_rest'      => true,
     );
 
-    register_taxonomy( 'wiki_category', array( 'wiki' ), $args );
+    register_taxonomy( 'wiki_category', array( 'yada_wiki' ), $args );
 }
 add_action( 'init', 'profamr_register_wiki_category_taxonomy' );
 
@@ -79,7 +79,7 @@ function profamr_register_wiki_tags_taxonomy() {
         'show_in_rest'      => true,
     );
 
-    register_taxonomy( 'wiki_tag', array( 'wiki' ), $args );
+    register_taxonomy( 'wiki_tag', array( 'yada_wiki' ), $args );
 }
 add_action( 'init', 'profamr_register_wiki_tags_taxonomy' );
 

@@ -108,7 +108,7 @@ get_header();
 
                 // Related wiki articles
                 $related_args = array(
-                    'post_type'      => 'wiki',
+                    'post_type'      => 'yada_wiki',
                     'posts_per_page' => 3,
                     'post__not_in'   => array( get_the_ID() ),
                     'orderby'        => 'rand',
@@ -156,10 +156,10 @@ get_header();
 
         <?php
         // Show wiki sidebar if active
-        if ( is_active_sidebar( 'sidebar-wiki' ) ) {
+        if ( is_active_sidebar( 'sidebar-yada_wiki' ) ) {
             ?>
             <aside id="secondary" class="sidebar">
-                <?php dynamic_sidebar( 'sidebar-wiki' ); ?>
+                <?php dynamic_sidebar( 'sidebar-yada_wiki' ); ?>
             </aside>
             <?php
         } elseif ( is_active_sidebar( 'sidebar-1' ) ) {
