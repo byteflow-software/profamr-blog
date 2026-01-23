@@ -2,69 +2,83 @@
 /**
  * The template for displaying 404 pages (not found)
  *
- * @package ProfAMR
- * @since 2.0.0
+ * @link https://codex.wordpress.org/Creating_an_Error_404_Page
+ *
+ * @package Newsmatic
  */
-
+use Newsmatic\CustomizerDefault as ND;
 get_header();
-?>
 
-<div class="container-narrow">
-    <section class="error-404 not-found">
-        <header class="page-header">
-            <h1 class="page-title"><?php esc_html_e( '404 - Page Not Found', 'profamr' ); ?></h1>
-        </header>
+if( did_action( 'elementor/loaded' ) && class_exists( 'Nekit_Render_Templates_Html' ) ) :
+	$Nekit_render_templates_html = new Nekit_Render_Templates_Html();
+	if( $Nekit_render_templates_html->is_template_available('404') ) {
+		$single_rendered = true;
+		echo $Nekit_render_templates_html->current_builder_template();
+	} else {
+		$single_rendered = false;
+	}
+else :
+	$single_rendered = false;
+endif;
 
-        <div class="page-content">
-            <p><?php esc_html_e( 'It looks like nothing was found at this location. Maybe try searching?', 'profamr' ); ?></p>
+if( ! $single_rendered ) :
+	?>
+	<div id="theme-content">
+		<?php
+			/**
+			 * hook - newsmatic_before_main_content
+			 * 
+			 */
+			do_action( 'newsmatic_before_main_content' );
+		?>
+		<main id="primary" class="site-main">
+			<div class="newsmatic-container">
+				<div class="row">
+				<div class="secondary-left-sidebar">
+						<?php
+							get_sidebar('left');
+						?>
+					</div>
+					<div class="primary-content">
+						<section class="error-404 not-found">
+							<?php
+								/**
+								 * hook - newsmatic_before_inner_content
+								 * 
+								 */
+								do_action( 'newsmatic_before_inner_content' );
+							?>
+							<div class="post-inner-wrapper">
+								<header class="page-header">
+									<h1 class="page-title newsmatic-block-title"><?php echo esc_html__( '404 Not Found', 'newsmatic' ); ?></h1>
+								</header><!-- .page-header -->
 
-            <?php get_search_form(); ?>
+								<div class="page-content">
+									<?php
+										$error_page_image = ND\newsmatic_get_customizer_option( 'error_page_image' );
+										if( $error_page_image != 0 ) {
+											echo wp_get_attachment_image( $error_page_image, 'full' );
+										} 
+									?>
+									<p><?php echo esc_html__( 'It looks like nothing was found at this location. Maybe try a search?', 'newsmatic' ); ?></p>
+								</div><!-- .page-content -->
 
-            <div class="widget widget_categories">
-                <h2 class="widget-title"><?php esc_html_e( 'Most Used Categories', 'profamr' ); ?></h2>
-                <ul>
-                    <?php
-                    wp_list_categories(
-                        array(
-                            'orderby'    => 'count',
-                            'order'      => 'DESC',
-                            'show_count' => 1,
-                            'title_li'   => '',
-                            'number'     => 10,
-                        )
-                    );
-                    ?>
-                </ul>
-            </div>
-
-            <?php
-            // Check if wiki articles exist
-            $wiki_query = new WP_Query( array(
-                'post_type'      => 'wiki',
-                'posts_per_page' => 5,
-                'orderby'        => 'rand',
-            ) );
-
-            if ( $wiki_query->have_posts() ) :
-                ?>
-                <div class="widget">
-                    <h2 class="widget-title"><?php esc_html_e( 'Browse Wiki Articles', 'profamr' ); ?></h2>
-                    <ul>
-                        <?php
-                        while ( $wiki_query->have_posts() ) :
-                            $wiki_query->the_post();
-                            ?>
-                            <li><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></li>
-                        <?php endwhile; ?>
-                    </ul>
-                </div>
-                <?php
-                wp_reset_postdata();
-            endif;
-            ?>
-        </div>
-    </section>
-</div>
-
+								<div class="page-footer">
+									<a class="button-404" href="<?php echo esc_url( home_url() ); ?>"><?php echo esc_html__( 'Go back to home', 'newsmatic' ); ?></a>
+								</div>
+							</div><!-- .post-inner-wrapper -->
+						</section><!-- .error-404 -->
+					</div>
+					<div class="secondary-sidebar">
+						<?php
+							get_sidebar();
+						?>
+					</div>
+				</div>
+			</div>
+		</main><!-- #main -->
+	</div><!-- #theme-content -->
 <?php
+endif;
+
 get_footer();

@@ -2,60 +2,74 @@
 /**
  * The template for displaying comments
  *
- * @package ProfAMR
- * @since 2.0.0
+ * This is the template that displays the area of the page that contains both the current comments
+ * and the comment form.
+ *
+ * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
+ *
+ * @package Newsmatic
  */
 
+/*
+ * If the current post is protected by a password and
+ * the visitor has not yet entered the password we will
+ * return early without loading the comments.
+ */
 if ( post_password_required() ) {
-    return;
+	return;
 }
 ?>
 
 <div id="comments" class="comments-area">
-    <?php if ( have_comments() ) : ?>
-        <h2 class="comments-title">
-            <?php
-            $profamr_comment_count = get_comments_number();
-            if ( '1' === $profamr_comment_count ) {
-                printf(
-                    /* translators: %s: post title */
-                    esc_html__( 'One comment on &ldquo;%s&rdquo;', 'profamr' ),
-                    '<span>' . esc_html( get_the_title() ) . '</span>'
-                );
-            } else {
-                printf(
-                    /* translators: 1: number of comments, 2: post title */
-                    esc_html( _n( '%1$s comment on &ldquo;%2$s&rdquo;', '%1$s comments on &ldquo;%2$s&rdquo;', $profamr_comment_count, 'profamr' ) ),
-                    number_format_i18n( $profamr_comment_count ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                    '<span>' . esc_html( get_the_title() ) . '</span>'
-                );
-            }
-            ?>
-        </h2>
 
-        <ol class="comment-list">
-            <?php
-            wp_list_comments(
-                array(
-                    'style'       => 'ol',
-                    'short_ping'  => true,
-                    'avatar_size' => 48,
-                )
-            );
-            ?>
-        </ol>
+	<?php
+	// You can start editing here -- including this comment!
+	if ( have_comments() ) :
+		?>
+		<h2 class="comments-title">
+			<?php
+			$newsmatic_comment_count = get_comments_number();
+			if ( '1' === $newsmatic_comment_count ) {
+				printf(
+					/* translators: 1: title. */
+					esc_html__( 'One thought on &ldquo;%1$s&rdquo;', 'newsmatic' ),
+					'<span>' . wp_kses_post( get_the_title() ) . '</span>'
+				);
+			} else {
+				printf( 
+					/* translators: 1: comment count number, 2: title. */
+					esc_html( _nx( '%1$s thought on &ldquo;%2$s&rdquo;', '%1$s thoughts on &ldquo;%2$s&rdquo;', $newsmatic_comment_count, 'comments title', 'newsmatic' ) ),
+					number_format_i18n( $newsmatic_comment_count ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					'<span>' . wp_kses_post( get_the_title() ) . '</span>'
+				);
+			}
+			?>
+		</h2><!-- .comments-title -->
 
-        <?php
-        the_comments_navigation();
+		<?php the_comments_navigation(); ?>
 
-        if ( ! comments_open() ) :
-            ?>
-            <p class="no-comments"><?php esc_html_e( 'Comments are closed.', 'profamr' ); ?></p>
-            <?php
-        endif;
+		<ol class="comment-list">
+			<?php
+				wp_list_comments(
+					array(
+						'style'      => 'ol',
+						'short_ping' => true,
+					)
+				);
+			?>
+		</ol><!-- .comment-list -->
 
-    endif;
+		<?php
+			the_comments_navigation();
+			// If comments are closed and there are comments, let's leave a little note, shall we?
+			if ( ! comments_open() ) :
+				?>
+				<p class="no-comments"><?php esc_html_e( 'Comments are closed.', 'newsmatic' ); ?></p>
+				<?php
+			endif;
+			
+		endif; // Check for have_comments().
+		comment_form();
+	?>
 
-    comment_form();
-    ?>
-</div>
+</div><!-- #comments -->

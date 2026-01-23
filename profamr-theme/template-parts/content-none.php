@@ -2,43 +2,49 @@
 /**
  * Template part for displaying a message that posts cannot be found
  *
- * @package ProfAMR
- * @since 2.0.0
+ * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
+ *
+ * @package Newsmatic
  */
+use Newsmatic\CustomizerDefault as ND;
 ?>
-
 <section class="no-results not-found">
-    <header class="page-header">
-        <h1 class="page-title"><?php esc_html_e( 'Nothing Found', 'profamr' ); ?></h1>
-    </header>
+	<header class="page-header">
+		<?php if( is_search() ) : ?>
+			<h1 class="page-title newsmatic-block-title"><?php echo newsmatic_wrap_last_word( esc_html( str_replace( '%key%', get_search_query(), sprintf( esc_html__( 'Nothing Found for - %1s', 'newsmatic' ), '%key%' ) ) ) ); ?></h1>
+		<?php else : ?>
+			<h1 class="page-title newsmatic-block-title"><?php echo newsmatic_wrap_last_word( esc_html__( 'Nothing Found', 'newsmatic' ) ); ?></h1>
+		<?php  endif;  ?>
+	</header><!-- .page-header -->
 
-    <div class="page-content">
-        <?php if ( is_home() && current_user_can( 'publish_posts' ) ) : ?>
-            <p>
-                <?php
-                /* translators: %s: link to create a new post */
-                printf(
-                    wp_kses(
-                        __( 'Ready to publish your first post? <a href="%s">Get started here</a>.', 'profamr' ),
-                        array(
-                            'a' => array(
-                                'href' => array(),
-                            ),
-                        )
-                    ),
-                    esc_url( admin_url( 'post-new.php' ) )
-                );
-                ?>
-            </p>
+	<div class="page-content">
+		<?php
+		if ( is_home() && current_user_can( 'publish_posts' ) ) :
+			printf(
+				'<p>' . wp_kses(
+					/* translators: 1: link to WP admin new post page. */
+					__( 'Ready to publish your first post? <a href="%1$s">Get started here</a>.', 'newsmatic' ),
+					array(
+						'a' => array(
+							'href' => array(),
+						),
+					)
+				) . '</p>',
+				esc_url( admin_url( 'post-new.php' ) )
+			);
+		elseif ( is_search() ) :
+			?>
+			<p><?php echo esc_html__( 'Sorry, but nothing matched your search terms. Please try again with some different keywords.', 'newsmatic' ); ?></p>
+			<?php
+			get_search_form();
 
-        <?php elseif ( is_search() ) : ?>
-            <p><?php esc_html_e( 'Sorry, but nothing matched your search terms. Please try again with different keywords.', 'profamr' ); ?></p>
-            <?php get_search_form(); ?>
+		else :
+			?>
+			<p><?php esc_html_e( 'It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help.', 'newsmatic' ); ?></p>
+			<?php
+			get_search_form();
 
-        <?php else : ?>
-            <p><?php esc_html_e( 'It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help.', 'profamr' ); ?></p>
-            <?php get_search_form(); ?>
-
-        <?php endif; ?>
-    </div>
-</section>
+		endif;
+		?>
+	</div><!-- .page-content -->
+</section><!-- .no-results -->
