@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Save, Eye, ArrowLeft, Loader2 } from 'lucide-react'
 import { slugify } from '@/lib/utils'
 import { createPost, updatePost } from './actions'
+import { RichTextEditor } from '@/components/editor'
 import styles from './PostForm.module.css'
 
 interface PostFormProps {
@@ -139,13 +140,10 @@ export function PostForm({ post, categories, tags }: PostFormProps) {
 
             <div className="admin-form-group">
               <label className="admin-form-label">Conteúdo</label>
-              <textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                className="admin-form-textarea"
-                placeholder="Escreva o conteúdo do post (HTML suportado)"
-                rows={20}
-                required
+              <RichTextEditor
+                content={content}
+                onChange={setContent}
+                placeholder="Comece a escrever o conteúdo do post..."
               />
             </div>
 

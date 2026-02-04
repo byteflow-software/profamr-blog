@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Save, Eye, ArrowLeft, Loader2 } from 'lucide-react'
 import { slugify } from '@/lib/utils'
 import { createWikiArticle, updateWikiArticle } from './actions'
+import { RichTextEditor } from '@/components/editor'
 import styles from './WikiForm.module.css'
 
 interface WikiFormProps {
@@ -131,12 +132,10 @@ export function WikiForm({ article, categories, articles }: WikiFormProps) {
 
             <div className="admin-form-group">
               <label className="admin-form-label">Conteúdo</label>
-              <textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                className="admin-form-textarea"
-                rows={20}
-                required
+              <RichTextEditor
+                content={content}
+                onChange={setContent}
+                placeholder="Comece a escrever o conteúdo do artigo..."
               />
             </div>
           </div>
