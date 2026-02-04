@@ -1,0 +1,65 @@
+/* Toggle button - hidden on desktop */
+.toggle {
+  display: none;
+}
+
+/* Desktop: always visible */
+.desktopContent {
+  display: block;
+}
+
+.title {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Mobile content - hidden on desktop */
+.mobileContent {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: var(--spacing-sm) 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+  }
+
+  .toggleLabel {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  .toggleIcon {
+    transition: transform var(--transition-fast);
+  }
+
+  .toggleIconOpen {
+    transform: rotate(180deg);
+  }
+
+  .desktopContent {
+    display: none;
+  }
+
+  .mobileContent {
+    display: block;
+    padding-top: var(--spacing-sm);
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+}

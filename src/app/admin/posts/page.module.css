@@ -1,0 +1,117 @@
+.page {
+  max-width: 1200px;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
+.tabs {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.tab {
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: transparent;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.tab:hover {
+  background: var(--color-bg-muted);
+  color: var(--color-text-secondary);
+}
+
+.tabActive {
+  background: var(--color-bg);
+  color: var(--color-secondary-dark);
+  box-shadow: var(--shadow-sm);
+}
+
+.search {
+  flex: 1;
+  max-width: 300px;
+}
+
+.search input {
+  width: 100%;
+}
+
+.postTitle {
+  font-weight: 500;
+  color: var(--color-text);
+  transition: color var(--transition-fast);
+}
+
+.postTitle:hover {
+  color: var(--color-secondary-dark);
+}
+
+.cellMuted {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--color-border-light);
+  margin-top: var(--spacing-lg);
+}
+
+.pageLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 var(--spacing-sm);
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.pageLink:hover {
+  background: var(--color-bg-muted);
+  border-color: var(--color-border);
+}
+
+.pageLinkActive {
+  background: var(--color-secondary);
+  border-color: var(--color-secondary);
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search {
+    max-width: none;
+  }
+
+  /* Make table scrollable */
+  .page :global(.admin-card) {
+    overflow-x: auto;
+  }
+
+  .page :global(.admin-table) {
+    min-width: 800px;
+  }
+}

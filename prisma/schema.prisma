@@ -1,0 +1,222 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Autores/Usuários
+model User {
+  id               Int       @id @default(autoincrement())
+  email            String    @unique
+  displayName      String    @map("display_name")
+  bio              String?   @db.Text
+  avatarUrl        String?   @map("avatar_url")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  // Campos de autenticação
+  passwordHash     String?   @map("password_hash")
+  role             UserRole  @default(AUTHOR)
+  twoFactorSecret  String?   @map("two_factor_secret")
+  twoFactorEnabled Boolean   @default(false) @map("two_factor_enabled")
+  failedAttempts   Int       @default(0) @map("failed_attempts")
+  lockedUntil      DateTime? @map("locked_until")
+  lastLoginAt      DateTime? @map("last_login_at")
+  lastLoginIp      String?   @map("last_login_ip")
+
+  posts            Post[]
+  wikiArticles     WikiArticle[]
+  sessions         Session[]
+
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+  AUTHOR
+}
+
+// Sessões de usuário
+model Session {
+  id        String   @id @default(cuid())
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime @map("expires_at")
+  userAgent String?  @map("user_agent")
+  ipAddress String?  @map("ip_address")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@index([token])
+  @@map("sessions")
+}
+
+// Log de tentativas de login
+model LoginLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int?     @map("user_id")
+  email     String
+  success   Boolean
+  ipAddress String   @map("ip_address")
+  userAgent String?  @map("user_agent")
+  reason    String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([email])
+  @@index([createdAt])
+  @@map("login_logs")
+}
+
+// Posts do Blog
+model Post {
+  id              Int       @id @default(autoincrement())
+  title           String
+  slug            String    @unique
+  content         String    @db.Text
+  excerpt         String?   @db.Text
+  featuredImage   String?   @map("featured_image")
+  status          PostStatus @default(DRAFT)
+  publishedAt     DateTime? @map("published_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  viewCount       Int       @default(0) @map("view_count")
+
+  authorId        Int       @map("author_id")
+  author          User      @relation(fields: [authorId], references: [id])
+
+  categories      CategoriesOnPosts[]
+  tags            TagsOnPosts[]
+
+  // WordPress migration reference
+  wpId            Int?      @unique @map("wp_id")
+
+  @@index([slug])
+  @@index([status, publishedAt])
+  @@map("posts")
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+// Categorias
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String
+  slug        String    @unique
+  description String?   @db.Text
+  parentId    Int?      @map("parent_id")
+  parent      Category? @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryHierarchy")
+
+  posts       CategoriesOnPosts[]
+
+  // WordPress migration reference
+  wpTermId    Int?      @unique @map("wp_term_id")
+
+  @@map("categories")
+}
+
+model CategoriesOnPosts {
+  postId     Int      @map("post_id")
+  categoryId Int      @map("category_id")
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([postId, categoryId])
+  @@map("categories_on_posts")
+}
+
+// Tags
+model Tag {
+  id    Int    @id @default(autoincrement())
+  name  String
+  slug  String @unique
+
+  posts TagsOnPosts[]
+
+  // WordPress migration reference
+  wpTermId Int? @unique @map("wp_term_id")
+
+  @@map("tags")
+}
+
+model TagsOnPosts {
+  postId Int  @map("post_id")
+  tagId  Int  @map("tag_id")
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag    Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+  @@map("tags_on_posts")
+}
+
+// Wiki - Seção separada
+model WikiArticle {
+  id              Int       @id @default(autoincrement())
+  title           String
+  slug            String    @unique
+  content         String    @db.Text
+  summary         String?   @db.Text
+  status          PostStatus @default(DRAFT)
+  publishedAt     DateTime? @map("published_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  viewCount       Int       @default(0) @map("view_count")
+  order           Int       @default(0)
+
+  authorId        Int       @map("author_id")
+  author          User      @relation(fields: [authorId], references: [id])
+
+  categoryId      Int?      @map("category_id")
+  category        WikiCategory? @relation(fields: [categoryId], references: [id])
+
+  parentId        Int?      @map("parent_id")
+  parent          WikiArticle? @relation("WikiHierarchy", fields: [parentId], references: [id])
+  children        WikiArticle[] @relation("WikiHierarchy")
+
+  // WordPress migration reference
+  wpId            Int?      @unique @map("wp_id")
+
+  @@index([slug])
+  @@index([status])
+  @@map("wiki_articles")
+}
+
+model WikiCategory {
+  id          Int       @id @default(autoincrement())
+  name        String
+  slug        String    @unique
+  description String?   @db.Text
+  icon        String?
+  color       String?
+  order       Int       @default(0)
+
+  articles    WikiArticle[]
+
+  // WordPress migration reference
+  wpTermId    Int?      @unique @map("wp_term_id")
+
+  @@map("wiki_categories")
+}
+
+// Configurações do Site
+model SiteSettings {
+  id          Int      @id @default(1)
+  siteName    String   @default("Prof. AMR") @map("site_name")
+  siteTagline String?  @map("site_tagline")
+  logo        String?
+  favicon     String?
+  aboutText   String?  @db.Text @map("about_text")
+  socialLinks Json?    @map("social_links")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("site_settings")
+}

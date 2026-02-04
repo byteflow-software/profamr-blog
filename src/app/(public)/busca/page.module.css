@@ -1,0 +1,215 @@
+.page {
+  min-height: 100vh;
+  padding: var(--spacing-2xl) 0;
+}
+
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+/* Header */
+.header {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  margin-bottom: var(--spacing-xl);
+}
+
+.searchForm {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background-color: var(--color-bg);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-sm) var(--spacing-md);
+  max-width: 600px;
+  transition: border-color var(--transition-fast);
+}
+
+.searchForm:focus-within {
+  border-color: var(--color-primary);
+}
+
+.searchIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.searchInput {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  color: var(--color-text);
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: var(--color-text-muted);
+}
+
+.searchButton {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.searchButton:hover {
+  background-color: var(--color-primary-light);
+}
+
+.results {
+  margin-top: var(--spacing-md);
+  color: var(--color-text-secondary);
+}
+
+/* Empty */
+.empty {
+  text-align: center;
+  padding: var(--spacing-3xl);
+  background-color: var(--color-bg-alt);
+  border-radius: var(--radius-lg);
+}
+
+.emptyIcon {
+  width: 48px;
+  height: 48px;
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-lg);
+}
+
+.empty h2 {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  color: var(--color-primary-dark);
+  margin-bottom: var(--spacing-md);
+}
+
+.empty p {
+  color: var(--color-text-secondary);
+}
+
+.empty a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+/* Section */
+.section {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sectionIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--color-primary);
+}
+
+/* Results List */
+.resultsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.resultItem {
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-normal);
+}
+
+.resultItem:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-primary);
+}
+
+.resultLink {
+  display: block;
+  padding: var(--spacing-lg);
+  text-decoration: none;
+}
+
+.resultTitle {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  margin-bottom: var(--spacing-sm);
+  transition: color var(--transition-fast);
+}
+
+.resultItem:hover .resultTitle {
+  color: var(--color-primary);
+}
+
+.resultExcerpt {
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-sm);
+}
+
+.resultMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.resultCategory {
+  background-color: var(--color-bg-muted);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .searchForm {
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+  }
+
+  .searchInput {
+    width: 100%;
+    text-align: center;
+  }
+
+  .searchButton {
+    width: 100%;
+  }
+}
