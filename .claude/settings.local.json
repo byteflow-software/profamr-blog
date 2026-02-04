@@ -4,7 +4,11 @@
       "Bash(npx tsc --noEmit)",
       "Bash(pnpm add:*)",
       "Bash(npx prisma:*)",
-      "Bash(pnpm remove speakeasy)"
+      "Bash(pnpm remove speakeasy)",
+      "Bash(npm install:*)",
+      "Bash(npm cache clean:*)",
+      "Bash(npm --version)",
+      "Bash(node --version:*)"
     ]
   }
 }

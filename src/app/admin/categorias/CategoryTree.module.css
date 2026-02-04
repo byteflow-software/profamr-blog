@@ -1,0 +1,230 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.toolbar {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.updating {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  margin-left: auto;
+}
+
+.error {
+  color: var(--color-error);
+  font-size: 0.875rem;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(220, 38, 38, 0.1);
+  border-radius: var(--radius-sm);
+}
+
+.hint {
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  font-style: italic;
+}
+
+.empty {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  text-align: center;
+  padding: var(--spacing-xl);
+}
+
+.tree {
+  display: flex;
+  flex-direction: column;
+}
+
+.rootDropZone {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  text-align: center;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-bottom: var(--spacing-sm);
+}
+
+.rootDropZone:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: rgba(var(--color-primary-rgb, 79, 70, 229), 0.05);
+}
+
+/* Tree Item */
+.item {
+  display: flex;
+  flex-direction: column;
+  padding-left: calc(var(--depth, 0) * 1.5rem);
+  transition: background 0.15s ease;
+}
+
+.item.dragging {
+  opacity: 0.5;
+}
+
+.item.over {
+  background: rgba(var(--color-primary-rgb, 79, 70, 229), 0.05);
+}
+
+.item.overAsChild {
+  background: rgba(var(--color-primary-rgb, 79, 70, 229), 0.1);
+  border-left: 3px solid var(--color-primary);
+}
+
+.itemContent {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-sm);
+  transition: background 0.15s ease;
+}
+
+.itemContent:hover {
+  background: var(--color-bg-secondary);
+}
+
+.dragHandle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xs);
+  color: var(--color-text-muted);
+  cursor: grab;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.dragHandle:hover {
+  color: var(--color-text);
+  background: var(--color-bg-tertiary);
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+.expandButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  color: var(--color-text-muted);
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.expandButton:hover:not(:disabled) {
+  color: var(--color-text);
+  background: var(--color-bg-tertiary);
+}
+
+.expandButton:disabled {
+  cursor: default;
+  opacity: 0;
+}
+
+.expandPlaceholder {
+  width: 16px;
+  height: 16px;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  color: var(--color-primary);
+}
+
+.name {
+  font-weight: 500;
+  color: var(--color-text);
+  flex-shrink: 0;
+}
+
+.slug {
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  margin-left: var(--spacing-sm);
+}
+
+.count {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  margin-left: auto;
+  margin-right: var(--spacing-md);
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  gap: var(--spacing-xs);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.itemContent:hover .actions {
+  opacity: 1;
+}
+
+.children {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Drag Overlay */
+.dragOverlay {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+}
+
+.dragOverlayName {
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .itemContent {
+    flex-wrap: wrap;
+  }
+
+  .slug {
+    display: none;
+  }
+
+  .count {
+    margin-left: var(--spacing-sm);
+  }
+
+  .actions {
+    opacity: 1;
+  }
+}

@@ -107,10 +107,15 @@ export default async function HomePage() {
           </section>
         </main>
 
-        {/* Sidebar */}
+        {/* Sidebar - Desktop */}
         <aside className={styles.sidebar}>
           <PodcastSidebar />
         </aside>
+      </div>
+
+      {/* Podcast Banner - Mobile */}
+      <div className={styles.mobilePodcastBanner}>
+        <PodcastSidebar />
       </div>
     </div>
   );

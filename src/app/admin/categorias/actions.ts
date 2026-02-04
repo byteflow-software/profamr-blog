@@ -81,6 +81,79 @@ export async function updateCategory(id: number, data: CategoryFormData) {
   }
 }
 
+interface CategoryHierarchyUpdate {
+  id: number
+  parentId: number | null
+}
+
+export async function updateCategoryHierarchy(updates: CategoryHierarchyUpdate[]) {
+  const session = await auth()
+  if (!session?.user) {
+    return { success: false, error: 'Não autorizado' }
+  }
+
+  try {
+    // Validate no cycles: a category cannot be a child of itself or its descendants
+    const allCategories = await prisma.category.findMany({
+      select: { id: true, parentId: true },
+    })
+
+    // Build a map with the proposed changes
+    const proposedParents = new Map<number, number | null>()
+    for (const cat of allCategories) {
+      proposedParents.set(cat.id, cat.parentId)
+    }
+    for (const update of updates) {
+      proposedParents.set(update.id, update.parentId)
+    }
+
+    // Check for cycles
+    const hasCircularReference = (categoryId: number, visited: Set<number> = new Set()): boolean => {
+      if (visited.has(categoryId)) return true
+      visited.add(categoryId)
+      const parentId = proposedParents.get(categoryId)
+      if (parentId === null || parentId === undefined) return false
+      return hasCircularReference(parentId, visited)
+    }
+
+    for (const update of updates) {
+      if (update.parentId !== null) {
+        // Check if parent exists
+        if (!proposedParents.has(update.parentId)) {
+          return { success: false, error: `Categoria pai ${update.parentId} não existe` }
+        }
+        // Check for self-reference
+        if (update.id === update.parentId) {
+          return { success: false, error: 'Uma categoria não pode ser pai de si mesma' }
+        }
+        // Check for circular reference
+        if (hasCircularReference(update.id)) {
+          return { success: false, error: 'Referência circular detectada' }
+        }
+      }
+    }
+
+    // Perform updates in a transaction
+    await prisma.$transaction(
+      updates.map((update) =>
+        prisma.category.update({
+          where: { id: update.id },
+          data: { parentId: update.parentId },
+        })
+      )
+    )
+
+    revalidatePath('/admin/categorias')
+    revalidatePath('/admin/posts')
+    revalidatePath('/blog')
+
+    return { success: true }
+  } catch (error) {
+    console.error('Error updating category hierarchy:', error)
+    return { success: false, error: 'Erro ao atualizar hierarquia' }
+  }
+}
+
 export async function deleteCategory(id: number) {
   const session = await auth()
   if (!session?.user) {

@@ -115,6 +115,11 @@
   white-space: nowrap;
 }
 
+/* Mobile Podcast Banner */
+.mobilePodcastBanner {
+  display: none;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .pageLayout {
@@ -122,10 +127,17 @@
   }
 
   .sidebar {
-    position: static;
-    order: -1;
-    max-width: 400px;
-    margin: 0 auto var(--spacing-xl);
+    display: none;
+  }
+
+  .mobilePodcastBanner {
+    display: block;
+    margin: var(--spacing-2xl) calc(-1 * var(--spacing-lg)) 0;
+    padding: 0;
+  }
+
+  .mobilePodcastBanner > * {
+    border-radius: 0;
   }
 }
 
