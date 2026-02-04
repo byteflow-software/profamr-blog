@@ -1,14 +1,21 @@
-import { auth } from '@/lib/auth'
 import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+import { getToken } from 'next-auth/jwt'
 
-export default auth((req) => {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
+  
+  // Get the token using the secret
+  const token = await getToken({ 
+    req, 
+    secret: process.env.AUTH_SECRET 
+  })
 
   // Public admin routes
   const publicRoutes = ['/admin/login']
   if (publicRoutes.includes(pathname)) {
     // If already logged in, redirect to dashboard
-    if (req.auth) {
+    if (token) {
       return NextResponse.redirect(new URL('/admin', req.url))
     }
     return NextResponse.next()
@@ -16,7 +23,7 @@ export default auth((req) => {
 
   // Protected admin routes
   if (pathname.startsWith('/admin')) {
-    if (!req.auth) {
+    if (!token) {
       const loginUrl = new URL('/admin/login', req.url)
       loginUrl.searchParams.set('callbackUrl', pathname)
       return NextResponse.redirect(loginUrl)
@@ -25,14 +32,14 @@ export default auth((req) => {
     // Check role-based access for specific routes
     const adminOnlyRoutes = ['/admin/usuarios']
     if (adminOnlyRoutes.some((route) => pathname.startsWith(route))) {
-      if (req.auth.user.role !== 'ADMIN') {
+      if (token.role !== 'ADMIN') {
         return NextResponse.redirect(new URL('/admin', req.url))
       }
     }
   }
 
   return NextResponse.next()
-})
+}
 
 export const config = {
   matcher: ['/admin/:path*'],
