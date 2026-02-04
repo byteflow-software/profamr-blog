@@ -82,9 +82,13 @@
   min-height: 400px;
   max-height: 600px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .editorContent {
+  overflow-x: auto;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
   padding: 16px 20px;
   outline: none;
   min-height: 400px;
@@ -269,6 +273,35 @@
   border-radius: 8px;
   margin: 1em 0;
   display: block;
+}
+
+/* Table */
+.editorContent table {
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.editorContent table th,
+.editorContent table td {
+  border: 1px solid var(--admin-border);
+  padding: 8px 12px;
+  text-align: left;
+  min-width: 100px;
+  word-break: break-word;
+}
+
+.editorContent table th {
+  background: var(--admin-bg);
+  font-weight: 600;
+}
+
+.editorContent table tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.02);
 }
 
 /* Text Alignment */

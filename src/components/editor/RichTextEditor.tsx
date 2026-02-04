@@ -1,13 +1,13 @@
 "use client";
 
-import { useEditor, EditorContent, BubbleMenu } from "@tiptap/react";
+import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder";
 import TextAlign from "@tiptap/extension-text-align";
 import Underline from "@tiptap/extension-underline";
-import TextStyle from "@tiptap/extension-text-style";
+import { TextStyle } from "@tiptap/extension-text-style";
 import Color from "@tiptap/extension-color";
 import Highlight from "@tiptap/extension-highlight";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
@@ -56,6 +56,7 @@ export function RichTextEditor({
   placeholder = "Comece a escrever...",
 }: RichTextEditorProps) {
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit.configure({
         codeBlock: false,
@@ -418,42 +419,6 @@ export function RichTextEditor({
           </div>
         </div>
       </div>
-
-      {/* Bubble Menu */}
-      <BubbleMenu
-        editor={editor}
-        tippyOptions={{ duration: 100 }}
-        className={styles.bubbleMenu}
-      >
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          className={`${styles.bubbleButton} ${editor.isActive("bold") ? styles.active : ""}`}
-        >
-          <Bold size={14} />
-        </button>
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={`${styles.bubbleButton} ${editor.isActive("italic") ? styles.active : ""}`}
-        >
-          <Italic size={14} />
-        </button>
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().toggleUnderline().run()}
-          className={`${styles.bubbleButton} ${editor.isActive("underline") ? styles.active : ""}`}
-        >
-          <UnderlineIcon size={14} />
-        </button>
-        <button
-          type="button"
-          onClick={setLink}
-          className={`${styles.bubbleButton} ${editor.isActive("link") ? styles.active : ""}`}
-        >
-          <LinkIcon size={14} />
-        </button>
-      </BubbleMenu>
 
       {/* Editor Content */}
       <EditorContent editor={editor} className={styles.editorWrapper} />
