@@ -8,7 +8,10 @@
       "Bash(npm install:*)",
       "Bash(npm cache clean:*)",
       "Bash(npm --version)",
-      "Bash(node --version:*)"
+      "Bash(node --version:*)",
+      "Bash(findstr:*)",
+      "Bash(npx pnpm add:*)",
+      "Bash(npx next build)"
     ]
   }
 }

@@ -181,25 +181,21 @@ export function CategoryTree({ categories }: CategoryTreeProps) {
       return
     }
 
-    const overId = over.id as number
-    const activeId = active.id as number
+    const targetId = over.id as number
+    const sourceId = active.id as number
 
     // Don't allow dropping on self or descendants
-    const activeNode = findNode(tree, activeId)
+    const activeNode = findNode(tree, sourceId)
     if (activeNode) {
       const descendantIds = getDescendantIds(activeNode)
-      if (overId === activeId || descendantIds.includes(overId)) {
+      if (targetId === sourceId || descendantIds.includes(targetId)) {
         setOverId(null)
         setOverAsChild(false)
         return
       }
     }
 
-    setOverId(overId)
-
-    // Determine if dropping as child based on pointer position
-    // For simplicity, we'll use a modifier key approach or always drop as child
-    // Here we'll make it drop as child by default
+    setOverId(targetId)
     setOverAsChild(true)
   }
 
@@ -214,16 +210,16 @@ export function CategoryTree({ categories }: CategoryTreeProps) {
       return
     }
 
-    const activeId = active.id as number
-    const overId = over.id as number
+    const sourceId = active.id as number
+    const targetId = over.id as number
 
     // Get the active node and validate
-    const activeNode = findNode(tree, activeId)
+    const activeNode = findNode(tree, sourceId)
     if (!activeNode) return
 
     // Check if dropping on a descendant
     const descendantIds = getDescendantIds(activeNode)
-    if (descendantIds.includes(overId)) {
+    if (descendantIds.includes(targetId)) {
       setError('Não é possível mover uma categoria para dentro de uma subcategoria')
       return
     }
@@ -234,7 +230,7 @@ export function CategoryTree({ categories }: CategoryTreeProps) {
 
     try {
       const result = await updateCategoryHierarchy([
-        { id: activeId, parentId: overId },
+        { id: sourceId, parentId: targetId },
       ])
 
       if (result.success) {
@@ -339,11 +335,11 @@ export function CategoryTree({ categories }: CategoryTreeProps) {
                 key={category.id}
                 category={category}
                 depth={0}
-                isExpanded={expanded.has(category.id)}
+                expandedIds={expanded}
                 onToggleExpand={toggleExpand}
-                isDragging={activeId === category.id}
-                isOver={overId === category.id && !overAsChild}
-                isOverAsChild={overId === category.id && overAsChild}
+                activeId={activeId}
+                overId={overId}
+                overAsChild={overAsChild}
               />
             ))}
           </div>
