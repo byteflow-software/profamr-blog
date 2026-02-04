@@ -1,5 +1,4 @@
 import { auth } from '@/lib/auth'
-import { redirect } from 'next/navigation'
 import { AdminSidebar } from '@/components/admin/AdminSidebar'
 import { AdminHeader } from '@/components/admin/AdminHeader'
 import './admin.css'
@@ -17,9 +16,6 @@ export default async function AdminLayout({
   children: React.ReactNode
 }) {
   const session = await auth()
-
-  // Login page doesn't need the admin layout
-  // The middleware handles auth redirects
 
   return (
     <div className="admin-layout">
