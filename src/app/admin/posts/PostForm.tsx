@@ -1,63 +1,63 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { Save, Eye, ArrowLeft, Loader2 } from 'lucide-react'
-import { slugify } from '@/lib/utils'
-import { createPost, updatePost } from './actions'
-import { RichTextEditor } from '@/components/editor'
-import styles from './PostForm.module.css'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Save, Eye, ArrowLeft, Loader2 } from "lucide-react";
+import { slugify } from "@/lib/utils";
+import { createPost, updatePost } from "./actions";
+import { RichTextEditor } from "@/components/editor";
+import styles from "./PostForm.module.css";
 
 interface PostFormProps {
   post?: {
-    id: number
-    title: string
-    slug: string
-    content: string
-    excerpt: string | null
-    featuredImage: string | null
-    status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED'
-    categories: { categoryId: number }[]
-    tags: { tagId: number }[]
-  }
-  categories: { id: number; name: string }[]
-  tags: { id: number; name: string }[]
+    id: number;
+    title: string;
+    slug: string;
+    content: string;
+    excerpt: string | null;
+    featuredImage: string | null;
+    status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+    categories: { categoryId: number }[];
+    tags: { tagId: number }[];
+  };
+  categories: { id: number; name: string }[];
+  tags: { id: number; name: string }[];
 }
 
 export function PostForm({ post, categories, tags }: PostFormProps) {
-  const router = useRouter()
-  const isEditing = !!post
+  const router = useRouter();
+  const isEditing = !!post;
 
-  const [title, setTitle] = useState(post?.title || '')
-  const [slug, setSlug] = useState(post?.slug || '')
-  const [content, setContent] = useState(post?.content || '')
-  const [excerpt, setExcerpt] = useState(post?.excerpt || '')
-  const [featuredImage, setFeaturedImage] = useState(post?.featuredImage || '')
-  const [status, setStatus] = useState<'DRAFT' | 'PUBLISHED' | 'ARCHIVED'>(
-    post?.status || 'DRAFT'
-  )
+  const [title, setTitle] = useState(post?.title || "");
+  const [slug, setSlug] = useState(post?.slug || "");
+  const [content, setContent] = useState(post?.content || "");
+  const [excerpt, setExcerpt] = useState(post?.excerpt || "");
+  const [featuredImage, setFeaturedImage] = useState(post?.featuredImage || "");
+  const [status, setStatus] = useState<"DRAFT" | "PUBLISHED" | "ARCHIVED">(
+    post?.status || "DRAFT",
+  );
   const [selectedCategories, setSelectedCategories] = useState<number[]>(
-    post?.categories.map((c) => c.categoryId) || []
-  )
+    post?.categories.map((c) => c.categoryId) || [],
+  );
   const [selectedTags, setSelectedTags] = useState<number[]>(
-    post?.tags.map((t) => t.tagId) || []
-  )
+    post?.tags.map((t) => t.tagId) || [],
+  );
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   const handleTitleChange = (value: string) => {
-    setTitle(value)
+    setTitle(value);
     if (!isEditing || slug === slugify(post.title)) {
-      setSlug(slugify(value))
+      setSlug(slugify(value));
     }
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
-    setIsSubmitting(true)
+    e.preventDefault();
+    setError("");
+    setIsSubmitting(true);
 
     const data = {
       title,
@@ -68,40 +68,40 @@ export function PostForm({ post, categories, tags }: PostFormProps) {
       status,
       categoryIds: selectedCategories,
       tagIds: selectedTags,
-    }
+    };
 
     try {
       const result = isEditing
         ? await updatePost(post.id, data)
-        : await createPost(data)
+        : await createPost(data);
 
       if (result.success) {
         if (isEditing) {
-          router.refresh()
+          router.refresh();
         } else {
-          router.push('/admin/posts')
+          router.push("/admin/posts");
         }
       } else {
-        setError(result.error || 'Erro ao salvar')
+        setError(result.error || "Erro ao salvar");
       }
     } catch {
-      setError('Erro ao salvar')
+      setError("Erro ao salvar");
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const toggleCategory = (id: number) => {
     setSelectedCategories((prev) =>
-      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
-    )
-  }
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id],
+    );
+  };
 
   const toggleTag = (id: number) => {
     setSelectedTags((prev) =>
-      prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]
-    )
-  }
+      prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id],
+    );
+  };
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
@@ -134,7 +134,7 @@ export function PostForm({ post, categories, tags }: PostFormProps) {
                 required
               />
               <span className="admin-form-hint">
-                URL: /blog/{slug || 'url-do-post'}
+                URL: /blog/{slug || "url-do-post"}
               </span>
             </div>
 
@@ -170,7 +170,11 @@ export function PostForm({ post, categories, tags }: PostFormProps) {
               <label className="admin-form-label">Status</label>
               <select
                 value={status}
-                onChange={(e) => setStatus(e.target.value as 'DRAFT' | 'PUBLISHED' | 'ARCHIVED')}
+                onChange={(e) =>
+                  setStatus(
+                    e.target.value as "DRAFT" | "PUBLISHED" | "ARCHIVED",
+                  )
+                }
                 className="admin-form-select"
               >
                 <option value="DRAFT">Rascunho</option>
@@ -193,12 +197,12 @@ export function PostForm({ post, categories, tags }: PostFormProps) {
                 ) : (
                   <>
                     <Save size={16} />
-                    {isEditing ? 'Atualizar' : 'Salvar'}
+                    {isEditing ? "Atualizar" : "Salvar"}
                   </>
                 )}
               </button>
 
-              {isEditing && post.status === 'PUBLISHED' && (
+              {isEditing && post.status === "PUBLISHED" && (
                 <Link
                   href={`/blog/${post.slug}`}
                   target="_blank"
@@ -248,8 +252,7 @@ export function PostForm({ post, categories, tags }: PostFormProps) {
               ))}
               {categories.length === 0 && (
                 <p className={styles.emptyText}>
-                  Nenhuma categoria.{' '}
-                  <Link href="/admin/categorias">Criar</Link>
+                  Nenhuma categoria. <Link href="/admin/categorias">Criar</Link>
                 </p>
               )}
             </div>
@@ -271,8 +274,7 @@ export function PostForm({ post, categories, tags }: PostFormProps) {
               ))}
               {tags.length === 0 && (
                 <p className={styles.emptyText}>
-                  Nenhuma tag.{' '}
-                  <Link href="/admin/tags">Criar</Link>
+                  Nenhuma tag. <Link href="/admin/tags">Criar</Link>
                 </p>
               )}
             </div>
@@ -287,5 +289,5 @@ export function PostForm({ post, categories, tags }: PostFormProps) {
         </Link>
       </div>
     </form>
-  )
+  );
 }

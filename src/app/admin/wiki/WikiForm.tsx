@@ -1,57 +1,63 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { Save, Eye, ArrowLeft, Loader2 } from 'lucide-react'
-import { slugify } from '@/lib/utils'
-import { createWikiArticle, updateWikiArticle } from './actions'
-import { RichTextEditor } from '@/components/editor'
-import styles from './WikiForm.module.css'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Save, Eye, ArrowLeft, Loader2 } from "lucide-react";
+import { slugify } from "@/lib/utils";
+import { createWikiArticle, updateWikiArticle } from "./actions";
+import { RichTextEditor } from "@/components/editor";
+import styles from "./WikiForm.module.css";
 
 interface WikiFormProps {
   article?: {
-    id: number
-    title: string
-    slug: string
-    content: string
-    summary: string | null
-    status: 'DRAFT' | 'PUBLISHED'
-    categoryId: number | null
-    parentId: number | null
-    order: number
-  }
-  categories: { id: number; name: string }[]
-  articles: { id: number; title: string }[]
+    id: number;
+    title: string;
+    slug: string;
+    content: string;
+    summary: string | null;
+    status: "DRAFT" | "PUBLISHED";
+    categoryId: number | null;
+    parentId: number | null;
+    order: number;
+  };
+  categories: { id: number; name: string }[];
+  articles: { id: number; title: string }[];
 }
 
 export function WikiForm({ article, categories, articles }: WikiFormProps) {
-  const router = useRouter()
-  const isEditing = !!article
+  const router = useRouter();
+  const isEditing = !!article;
 
-  const [title, setTitle] = useState(article?.title || '')
-  const [slug, setSlug] = useState(article?.slug || '')
-  const [content, setContent] = useState(article?.content || '')
-  const [summary, setSummary] = useState(article?.summary || '')
-  const [status, setStatus] = useState<'DRAFT' | 'PUBLISHED'>(article?.status || 'DRAFT')
-  const [categoryId, setCategoryId] = useState<number | null>(article?.categoryId || null)
-  const [parentId, setParentId] = useState<number | null>(article?.parentId || null)
-  const [order, setOrder] = useState(article?.order || 0)
+  const [title, setTitle] = useState(article?.title || "");
+  const [slug, setSlug] = useState(article?.slug || "");
+  const [content, setContent] = useState(article?.content || "");
+  const [summary, setSummary] = useState(article?.summary || "");
+  const [status, setStatus] = useState<"DRAFT" | "PUBLISHED">(
+    article?.status || "DRAFT",
+  );
+  const [categoryId, setCategoryId] = useState<number | null>(
+    article?.categoryId || null,
+  );
+  const [parentId, setParentId] = useState<number | null>(
+    article?.parentId || null,
+  );
+  const [order, setOrder] = useState(article?.order || 0);
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   const handleTitleChange = (value: string) => {
-    setTitle(value)
+    setTitle(value);
     if (!isEditing || slug === slugify(article.title)) {
-      setSlug(slugify(value))
+      setSlug(slugify(value));
     }
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
-    setIsSubmitting(true)
+    e.preventDefault();
+    setError("");
+    setIsSubmitting(true);
 
     const data = {
       title,
@@ -62,31 +68,31 @@ export function WikiForm({ article, categories, articles }: WikiFormProps) {
       categoryId,
       parentId,
       order,
-    }
+    };
 
     try {
       const result = isEditing
         ? await updateWikiArticle(article.id, data)
-        : await createWikiArticle(data)
+        : await createWikiArticle(data);
 
       if (result.success) {
         if (isEditing) {
-          router.refresh()
+          router.refresh();
         } else {
-          router.push('/admin/wiki')
+          router.push("/admin/wiki");
         }
       } else {
-        setError(result.error || 'Erro ao salvar')
+        setError(result.error || "Erro ao salvar");
       }
     } catch {
-      setError('Erro ao salvar')
+      setError("Erro ao salvar");
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   // Filter out current article from parent options
-  const parentOptions = articles.filter((a) => a.id !== article?.id)
+  const parentOptions = articles.filter((a) => a.id !== article?.id);
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
@@ -116,7 +122,9 @@ export function WikiForm({ article, categories, articles }: WikiFormProps) {
                 className="admin-form-input"
                 required
               />
-              <span className="admin-form-hint">URL: /wiki/{slug || 'url-do-artigo'}</span>
+              <span className="admin-form-hint">
+                URL: /wiki/{slug || "url-do-artigo"}
+              </span>
             </div>
 
             <div className="admin-form-group">
@@ -151,7 +159,9 @@ export function WikiForm({ article, categories, articles }: WikiFormProps) {
               <label className="admin-form-label">Status</label>
               <select
                 value={status}
-                onChange={(e) => setStatus(e.target.value as 'DRAFT' | 'PUBLISHED')}
+                onChange={(e) =>
+                  setStatus(e.target.value as "DRAFT" | "PUBLISHED")
+                }
                 className="admin-form-select"
               >
                 <option value="DRAFT">Rascunho</option>
@@ -173,7 +183,7 @@ export function WikiForm({ article, categories, articles }: WikiFormProps) {
                 ) : (
                   <>
                     <Save size={16} />
-                    {isEditing ? 'Atualizar' : 'Salvar'}
+                    {isEditing ? "Atualizar" : "Salvar"}
                   </>
                 )}
               </button>
@@ -184,8 +194,10 @@ export function WikiForm({ article, categories, articles }: WikiFormProps) {
           <div className="admin-card">
             <h3 className={styles.sidebarTitle}>Categoria</h3>
             <select
-              value={categoryId || ''}
-              onChange={(e) => setCategoryId(e.target.value ? parseInt(e.target.value) : null)}
+              value={categoryId || ""}
+              onChange={(e) =>
+                setCategoryId(e.target.value ? parseInt(e.target.value) : null)
+              }
               className="admin-form-select"
             >
               <option value="">Sem categoria</option>
@@ -204,8 +216,10 @@ export function WikiForm({ article, categories, articles }: WikiFormProps) {
             <div className="admin-form-group">
               <label className="admin-form-label">Artigo Pai</label>
               <select
-                value={parentId || ''}
-                onChange={(e) => setParentId(e.target.value ? parseInt(e.target.value) : null)}
+                value={parentId || ""}
+                onChange={(e) =>
+                  setParentId(e.target.value ? parseInt(e.target.value) : null)
+                }
                 className="admin-form-select"
               >
                 <option value="">Nenhum (raiz)</option>
@@ -238,5 +252,5 @@ export function WikiForm({ article, categories, articles }: WikiFormProps) {
         </Link>
       </div>
     </form>
-  )
+  );
 }
