@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import { Eye, EyeOff, Lock, Mail, Shield, AlertCircle, Loader2 } from 'lucide-react'
 import styles from './page.module.css'
 
@@ -11,6 +11,13 @@ export default function LoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl') || '/admin'
+  const { status } = useSession()
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.replace(callbackUrl)
+    }
+  }, [status, router, callbackUrl])
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -49,6 +56,10 @@ export default function LoginPage() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  if (status === 'authenticated') {
+    return null
   }
 
   return (
