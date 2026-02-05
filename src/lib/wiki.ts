@@ -20,6 +20,7 @@ export interface WikiCategoryTree {
   id: number
   name: string
   slug: string
+  children: WikiCategoryTree[]
   articles: WikiArticleTree[]
 }
 
@@ -38,6 +39,34 @@ function buildArticleTree(
     }))
 }
 
+interface WikiCategoryFlat {
+  id: number
+  name: string
+  slug: string
+  parentId: number | null
+  order: number
+}
+
+function buildCategoryTree(
+  categories: WikiCategoryFlat[],
+  articles: WikiArticleFlat[],
+  parentId: number | null
+): WikiCategoryTree[] {
+  return categories
+    .filter((c) => c.parentId === parentId)
+    .sort((a, b) => a.order - b.order)
+    .map((cat) => {
+      const categoryArticles = articles.filter((a) => a.categoryId === cat.id)
+      return {
+        id: cat.id,
+        name: cat.name,
+        slug: cat.slug,
+        children: buildCategoryTree(categories, articles, cat.id),
+        articles: buildArticleTree(categoryArticles, null),
+      }
+    })
+}
+
 export async function getWikiTreeData(): Promise<WikiCategoryTree[]> {
   const [categories, articles] = await Promise.all([
     prisma.wikiCategory.findMany({
@@ -46,6 +75,8 @@ export async function getWikiTreeData(): Promise<WikiCategoryTree[]> {
         id: true,
         name: true,
         slug: true,
+        parentId: true,
+        order: true,
       },
     }),
     prisma.wikiArticle.findMany({
@@ -61,13 +92,5 @@ export async function getWikiTreeData(): Promise<WikiCategoryTree[]> {
     }),
   ])
 
-  return categories.map((cat) => {
-    const categoryArticles = articles.filter((a) => a.categoryId === cat.id)
-    return {
-      id: cat.id,
-      name: cat.name,
-      slug: cat.slug,
-      articles: buildArticleTree(categoryArticles, null),
-    }
-  })
+  return buildCategoryTree(categories, articles, null)
 }

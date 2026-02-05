@@ -11,7 +11,8 @@
       "Bash(node --version:*)",
       "Bash(findstr:*)",
       "Bash(npx pnpm add:*)",
-      "Bash(npx next build)"
+      "Bash(npx next build)",
+      "Bash(npx tsx:*)"
     ]
   }
 }

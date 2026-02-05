@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import { ArrowLeft, Pencil, Trash2 } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
 import { WikiCategoryForm } from './WikiCategoryForm'
-import { DeleteWikiCategoryButton } from './DeleteWikiCategoryButton'
+import { WikiCategoryTree } from './WikiCategoryTree'
 import styles from './page.module.css'
 
 async function getCategories() {
@@ -10,6 +10,7 @@ async function getCategories() {
     orderBy: { order: 'asc' },
     include: {
       _count: { select: { articles: true } },
+      parent: { select: { name: true } },
     },
   })
 }
@@ -34,56 +35,13 @@ export default async function WikiCategoriesPage() {
         {/* Form */}
         <div className="admin-card">
           <h2 className={styles.cardTitle}>Nova Categoria</h2>
-          <WikiCategoryForm />
+          <WikiCategoryForm categories={categories} />
         </div>
 
-        {/* List */}
+        {/* Tree */}
         <div className="admin-card">
-          <h2 className={styles.cardTitle}>Todas as Categorias</h2>
-
-          {categories.length === 0 ? (
-            <p className={styles.empty}>Nenhuma categoria cadastrada.</p>
-          ) : (
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>Nome</th>
-                  <th>Slug</th>
-                  <th>Artigos</th>
-                  <th>Ordem</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {categories.map((cat) => (
-                  <tr key={cat.id}>
-                    <td className={styles.name}>
-                      {cat.icon && <span>{cat.icon} </span>}
-                      {cat.name}
-                    </td>
-                    <td className={styles.slug}>{cat.slug}</td>
-                    <td className={styles.count}>{cat._count.articles}</td>
-                    <td className={styles.order}>{cat.order}</td>
-                    <td>
-                      <div className="admin-table-actions">
-                        <Link
-                          href={`/admin/wiki/categorias/${cat.id}`}
-                          className="admin-btn admin-btn-sm admin-btn-secondary"
-                        >
-                          <Pencil size={14} />
-                        </Link>
-                        <DeleteWikiCategoryButton
-                          categoryId={cat.id}
-                          categoryName={cat.name}
-                          articleCount={cat._count.articles}
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+          <h2 className={styles.cardTitle}>Hierarquia de Categorias</h2>
+          <WikiCategoryTree categories={categories} />
         </div>
       </div>
     </div>

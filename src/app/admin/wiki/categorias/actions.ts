@@ -12,6 +12,13 @@ interface WikiCategoryFormData {
   icon?: string
   color?: string
   order?: number
+  parentId?: number | null
+}
+
+function revalidateWikiPaths() {
+  revalidatePath('/admin/wiki/categorias')
+  revalidatePath('/admin/wiki')
+  revalidatePath('/wiki')
 }
 
 export async function createWikiCategory(data: WikiCategoryFormData) {
@@ -36,12 +43,11 @@ export async function createWikiCategory(data: WikiCategoryFormData) {
         icon: data.icon,
         color: data.color,
         order: data.order || 0,
+        parentId: data.parentId ?? null,
       },
     })
 
-    revalidatePath('/admin/wiki/categorias')
-    revalidatePath('/admin/wiki')
-    revalidatePath('/wiki')
+    revalidateWikiPaths()
 
     return { success: true }
   } catch (error) {
@@ -75,17 +81,82 @@ export async function updateWikiCategory(id: number, data: WikiCategoryFormData)
         icon: data.icon,
         color: data.color,
         order: data.order || 0,
+        parentId: data.parentId ?? null,
       },
     })
 
-    revalidatePath('/admin/wiki/categorias')
-    revalidatePath('/admin/wiki')
-    revalidatePath('/wiki')
+    revalidateWikiPaths()
 
     return { success: true }
   } catch (error) {
     console.error('Error updating wiki category:', error)
     return { success: false, error: 'Erro ao atualizar categoria' }
+  }
+}
+
+interface WikiCategoryHierarchyUpdate {
+  id: number
+  parentId: number | null
+}
+
+export async function updateWikiCategoryHierarchy(updates: WikiCategoryHierarchyUpdate[]) {
+  const session = await auth()
+  if (!session?.user) {
+    return { success: false, error: 'Não autorizado' }
+  }
+
+  try {
+    const allCategories = await prisma.wikiCategory.findMany({
+      select: { id: true, parentId: true },
+    })
+
+    // Build proposed parent map
+    const proposedParents = new Map<number, number | null>()
+    for (const cat of allCategories) {
+      proposedParents.set(cat.id, cat.parentId)
+    }
+    for (const update of updates) {
+      proposedParents.set(update.id, update.parentId)
+    }
+
+    // Check for cycles
+    const hasCircularReference = (categoryId: number, visited: Set<number> = new Set()): boolean => {
+      if (visited.has(categoryId)) return true
+      visited.add(categoryId)
+      const parentId = proposedParents.get(categoryId)
+      if (parentId === null || parentId === undefined) return false
+      return hasCircularReference(parentId, visited)
+    }
+
+    for (const update of updates) {
+      if (update.parentId !== null) {
+        if (!proposedParents.has(update.parentId)) {
+          return { success: false, error: `Categoria pai ${update.parentId} não existe` }
+        }
+        if (update.id === update.parentId) {
+          return { success: false, error: 'Uma categoria não pode ser pai de si mesma' }
+        }
+        if (hasCircularReference(update.id)) {
+          return { success: false, error: 'Referência circular detectada' }
+        }
+      }
+    }
+
+    await prisma.$transaction(
+      updates.map((update) =>
+        prisma.wikiCategory.update({
+          where: { id: update.id },
+          data: { parentId: update.parentId },
+        })
+      )
+    )
+
+    revalidateWikiPaths()
+
+    return { success: true }
+  } catch (error) {
+    console.error('Error updating wiki category hierarchy:', error)
+    return { success: false, error: 'Erro ao atualizar hierarquia' }
   }
 }
 
@@ -114,7 +185,7 @@ export async function deleteWikiCategory(id: number) {
 
     await prisma.wikiCategory.delete({ where: { id } })
 
-    revalidatePath('/admin/wiki/categorias')
+    revalidateWikiPaths()
 
     return { success: true }
   } catch (error) {

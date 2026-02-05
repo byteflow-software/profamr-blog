@@ -15,10 +15,16 @@ interface WikiCategoryFormProps {
     icon: string | null
     color: string | null
     order: number
+    parentId: number | null
   }
+  categories?: {
+    id: number
+    name: string
+    parentId: number | null
+  }[]
 }
 
-export function WikiCategoryForm({ category }: WikiCategoryFormProps) {
+export function WikiCategoryForm({ category, categories = [] }: WikiCategoryFormProps) {
   const router = useRouter()
   const isEditing = !!category
 
@@ -27,9 +33,31 @@ export function WikiCategoryForm({ category }: WikiCategoryFormProps) {
   const [description, setDescription] = useState(category?.description || '')
   const [icon, setIcon] = useState(category?.icon || '')
   const [order, setOrder] = useState(category?.order || 0)
+  const [parentId, setParentId] = useState<number | null>(category?.parentId ?? null)
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
+
+  // Filter out current category and its descendants from parent options
+  const getAvailableParents = () => {
+    if (!isEditing) return categories
+
+    const descendantIds = new Set<number>()
+    const findDescendants = (id: number) => {
+      for (const cat of categories) {
+        if (cat.parentId === id) {
+          descendantIds.add(cat.id)
+          findDescendants(cat.id)
+        }
+      }
+    }
+    descendantIds.add(category.id)
+    findDescendants(category.id)
+
+    return categories.filter((c) => !descendantIds.has(c.id))
+  }
+
+  const availableParents = getAvailableParents()
 
   const handleNameChange = (value: string) => {
     setName(value)
@@ -49,6 +77,7 @@ export function WikiCategoryForm({ category }: WikiCategoryFormProps) {
       description: description || undefined,
       icon: icon || undefined,
       order,
+      parentId,
     }
 
     try {
@@ -63,6 +92,7 @@ export function WikiCategoryForm({ category }: WikiCategoryFormProps) {
           setDescription('')
           setIcon('')
           setOrder(0)
+          setParentId(null)
         }
         router.refresh()
       } else {
@@ -103,6 +133,22 @@ export function WikiCategoryForm({ category }: WikiCategoryFormProps) {
           className="admin-form-input"
           required
         />
+      </div>
+
+      <div className="admin-form-group">
+        <label className="admin-form-label">Categoria Pai</label>
+        <select
+          value={parentId ?? ''}
+          onChange={(e) => setParentId(e.target.value ? parseInt(e.target.value) : null)}
+          className="admin-form-input"
+        >
+          <option value="">Nenhuma (raiz)</option>
+          {availableParents.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="admin-form-group">

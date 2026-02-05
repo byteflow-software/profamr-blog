@@ -12,6 +12,13 @@ async function getCategory(id: number) {
   return prisma.wikiCategory.findUnique({ where: { id } })
 }
 
+async function getAllCategories() {
+  return prisma.wikiCategory.findMany({
+    orderBy: { name: 'asc' },
+    select: { id: true, name: true, parentId: true },
+  })
+}
+
 export default async function EditWikiCategoryPage({ params }: EditWikiCategoryPageProps) {
   const { id } = await params
   const categoryId = parseInt(id)
@@ -20,7 +27,10 @@ export default async function EditWikiCategoryPage({ params }: EditWikiCategoryP
     notFound()
   }
 
-  const category = await getCategory(categoryId)
+  const [category, categories] = await Promise.all([
+    getCategory(categoryId),
+    getAllCategories(),
+  ])
 
   if (!category) {
     notFound()
@@ -36,7 +46,7 @@ export default async function EditWikiCategoryPage({ params }: EditWikiCategoryP
       </div>
 
       <div className="admin-card">
-        <WikiCategoryForm category={category} />
+        <WikiCategoryForm category={category} categories={categories} />
       </div>
 
       <div style={{ marginTop: 'var(--spacing-lg)' }}>

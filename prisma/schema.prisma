@@ -191,13 +191,16 @@ model WikiArticle {
 }
 
 model WikiCategory {
-  id          Int       @id @default(autoincrement())
+  id          Int             @id @default(autoincrement())
   name        String
-  slug        String    @unique
-  description String?   @db.Text
+  slug        String          @unique
+  description String?         @db.Text
   icon        String?
   color       String?
-  order       Int       @default(0)
+  order       Int             @default(0)
+  parentId    Int?            @map("parent_id")
+  parent      WikiCategory?   @relation("WikiCategoryHierarchy", fields: [parentId], references: [id])
+  children    WikiCategory[]  @relation("WikiCategoryHierarchy")
 
   articles    WikiArticle[]
 
