@@ -1,11 +1,11 @@
-import { auth } from '@/lib/auth'
+import { getCurrentUser } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { UserForm } from '../UserForm'
 
 export default async function NewUserPage() {
-  const session = await auth()
+  const user = await getCurrentUser()
 
-  if (session?.user?.role !== 'ADMIN') {
+  if (user?.role !== 'ADMIN') {
     redirect('/admin')
   }
 

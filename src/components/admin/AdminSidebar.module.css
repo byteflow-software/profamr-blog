@@ -67,17 +67,29 @@
   color: var(--color-text-secondary);
 }
 
-.collapsed .collapseBtn {
+.expandBtn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-muted);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: all var(--transition-fast);
   transform: rotate(180deg);
+}
+
+.expandBtn:hover {
+  background: var(--color-bg-alt);
+  color: var(--color-text-secondary);
 }
 
 .collapsed .header {
   justify-content: center;
   padding: var(--spacing-md);
-}
-
-.collapsed .collapseBtn {
-  display: none;
 }
 
 .nav {

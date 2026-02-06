@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { auth } from '@/lib/auth'
+import { getCurrentUser } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { slugify } from '@/lib/utils'
 
@@ -13,8 +13,8 @@ interface CategoryFormData {
 }
 
 export async function createCategory(data: CategoryFormData) {
-  const session = await auth()
-  if (!session?.user) {
+  const user = await getCurrentUser()
+  if (!user) {
     return { success: false, error: 'Não autorizado' }
   }
 
@@ -46,8 +46,8 @@ export async function createCategory(data: CategoryFormData) {
 }
 
 export async function updateCategory(id: number, data: CategoryFormData) {
-  const session = await auth()
-  if (!session?.user) {
+  const user = await getCurrentUser()
+  if (!user) {
     return { success: false, error: 'Não autorizado' }
   }
 
@@ -87,8 +87,8 @@ interface CategoryHierarchyUpdate {
 }
 
 export async function updateCategoryHierarchy(updates: CategoryHierarchyUpdate[]) {
-  const session = await auth()
-  if (!session?.user) {
+  const user = await getCurrentUser()
+  if (!user) {
     return { success: false, error: 'Não autorizado' }
   }
 
@@ -155,8 +155,8 @@ export async function updateCategoryHierarchy(updates: CategoryHierarchyUpdate[]
 }
 
 export async function deleteCategory(id: number) {
-  const session = await auth()
-  if (!session?.user) {
+  const user = await getCurrentUser()
+  if (!user) {
     return { success: false, error: 'Não autorizado' }
   }
 

@@ -1,9 +1,7 @@
-import { auth } from '@/lib/auth'
+import { getCurrentUser } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { ProfileForm } from './ProfileForm'
-import { PasswordForm } from './PasswordForm'
-import { TwoFactorSetup } from './TwoFactorSetup'
 
 async function getUser(id: number) {
   return prisma.user.findUnique({
@@ -15,9 +13,7 @@ async function getUser(id: number) {
       bio: true,
       avatarUrl: true,
       role: true,
-      twoFactorEnabled: true,
       createdAt: true,
-      lastLoginAt: true,
       _count: {
         select: {
           posts: true,
@@ -29,13 +25,13 @@ async function getUser(id: number) {
 }
 
 export default async function ProfilePage() {
-  const session = await auth()
+  const currentUser = await getCurrentUser()
 
-  if (!session?.user) {
+  if (!currentUser) {
     redirect('/admin/login')
   }
 
-  const user = await getUser(parseInt(session.user.id))
+  const user = await getUser(currentUser.id)
 
   if (!user) {
     redirect('/admin/login')
@@ -59,7 +55,6 @@ export default async function ProfilePage() {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 'var(--spacing-lg)', alignItems: 'start' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)' }}>
           <ProfileForm user={user} />
-          <PasswordForm userId={user.id} />
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
@@ -89,22 +84,7 @@ export default async function ProfilePage() {
                 year: 'numeric',
               })}
             </div>
-
-            <div style={{ fontSize: '0.875rem' }}>
-              <strong>Último acesso:</strong><br />
-              {user.lastLoginAt
-                ? new Date(user.lastLoginAt).toLocaleDateString('pt-BR', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })
-                : 'Nunca'}
-            </div>
           </div>
-
-          <TwoFactorSetup userId={user.id} enabled={user.twoFactorEnabled} />
         </div>
       </div>
     </div>

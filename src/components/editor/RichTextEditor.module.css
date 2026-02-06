@@ -85,6 +85,24 @@
   overflow-x: hidden;
 }
 
+.htmlEditor {
+  width: 100%;
+  min-height: 400px;
+  max-height: 600px;
+  padding: 16px 20px;
+  border: none;
+  outline: none;
+  resize: vertical;
+  font-family: "Fira Code", "Monaco", "Consolas", monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #d4d4d4;
+  background: #1e1e1e;
+  tab-size: 2;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
 .editorContent {
   overflow-x: auto;
   word-wrap: break-word;

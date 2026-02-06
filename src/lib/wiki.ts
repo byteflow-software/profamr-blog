@@ -20,6 +20,8 @@ export interface WikiCategoryTree {
   id: number
   name: string
   slug: string
+  icon: string | null
+  color: string | null
   children: WikiCategoryTree[]
   articles: WikiArticleTree[]
 }
@@ -43,6 +45,8 @@ interface WikiCategoryFlat {
   id: number
   name: string
   slug: string
+  icon: string | null
+  color: string | null
   parentId: number | null
   order: number
 }
@@ -61,6 +65,8 @@ function buildCategoryTree(
         id: cat.id,
         name: cat.name,
         slug: cat.slug,
+        icon: cat.icon,
+        color: cat.color,
         children: buildCategoryTree(categories, articles, cat.id),
         articles: buildArticleTree(categoryArticles, null),
       }
@@ -75,6 +81,8 @@ export async function getWikiTreeData(): Promise<WikiCategoryTree[]> {
         id: true,
         name: true,
         slug: true,
+        icon: true,
+        color: true,
         parentId: true,
         order: true,
       },

@@ -2,9 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { signOut } from 'next-auth/react'
-import { User, Settings, LogOut, ChevronDown, Shield } from 'lucide-react'
+import { useClerk } from '@clerk/nextjs'
+import { User, Settings, LogOut, ChevronDown } from 'lucide-react'
 import styles from './AdminHeader.module.css'
 
 interface AdminHeaderProps {
@@ -12,7 +11,6 @@ interface AdminHeaderProps {
     displayName: string
     email: string
     role: string
-    twoFactorEnabled: boolean
   }
 }
 
@@ -23,7 +21,7 @@ const roleLabels: Record<string, string> = {
 }
 
 export function AdminHeader({ user }: AdminHeaderProps) {
-  const router = useRouter()
+  const { signOut } = useClerk()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -39,8 +37,7 @@ export function AdminHeader({ user }: AdminHeaderProps) {
   }, [])
 
   const handleSignOut = async () => {
-    await signOut({ redirect: false })
-    router.push('/admin/login')
+    await signOut({ redirectUrl: '/admin/login' })
   }
 
   return (
@@ -72,12 +69,6 @@ export function AdminHeader({ user }: AdminHeaderProps) {
             <div className={styles.dropdown}>
               <div className={styles.dropdownHeader}>
                 <span className={styles.dropdownEmail}>{user.email}</span>
-                {user.twoFactorEnabled && (
-                  <span className={styles.badge2fa}>
-                    <Shield size={12} />
-                    2FA
-                  </span>
-                )}
               </div>
 
               <div className={styles.dropdownDivider} />

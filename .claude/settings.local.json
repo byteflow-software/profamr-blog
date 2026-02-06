@@ -12,7 +12,9 @@
       "Bash(findstr:*)",
       "Bash(npx pnpm add:*)",
       "Bash(npx next build)",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "Bash(ls:*)",
+      "Bash(pnpm build:*)"
     ]
   }
 }

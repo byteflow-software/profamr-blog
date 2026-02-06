@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { auth } from '@/lib/auth'
+import { getCurrentUser } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { slugify } from '@/lib/utils'
 
@@ -18,8 +18,8 @@ interface PostFormData {
 }
 
 export async function createPost(data: PostFormData) {
-  const session = await auth()
-  if (!session?.user) {
+  const user = await getCurrentUser()
+  if (!user) {
     return { success: false, error: 'Não autorizado' }
   }
 
@@ -41,7 +41,7 @@ export async function createPost(data: PostFormData) {
         featuredImage: data.featuredImage,
         status: data.status,
         publishedAt: data.status === 'PUBLISHED' ? new Date() : null,
-        authorId: parseInt(session.user.id),
+        authorId: user.id,
         categories: {
           create: data.categoryIds.map((categoryId) => ({
             categoryId,
@@ -67,8 +67,8 @@ export async function createPost(data: PostFormData) {
 }
 
 export async function updatePost(postId: number, data: PostFormData) {
-  const session = await auth()
-  if (!session?.user) {
+  const user = await getCurrentUser()
+  if (!user) {
     return { success: false, error: 'Não autorizado' }
   }
 
@@ -80,8 +80,8 @@ export async function updatePost(postId: number, data: PostFormData) {
 
     // Check permissions (only author or admin/editor can edit)
     if (
-      session.user.role === 'AUTHOR' &&
-      post.authorId !== parseInt(session.user.id)
+      user.role === 'AUTHOR' &&
+      post.authorId !== user.id
     ) {
       return { success: false, error: 'Sem permissão para editar este post' }
     }
@@ -146,8 +146,8 @@ export async function updatePost(postId: number, data: PostFormData) {
 }
 
 export async function deletePost(postId: number) {
-  const session = await auth()
-  if (!session?.user) {
+  const user = await getCurrentUser()
+  if (!user) {
     return { success: false, error: 'Não autorizado' }
   }
 
@@ -159,8 +159,8 @@ export async function deletePost(postId: number) {
 
     // Check permissions (only author or admin/editor can delete)
     if (
-      session.user.role === 'AUTHOR' &&
-      post.authorId !== parseInt(session.user.id)
+      user.role === 'AUTHOR' &&
+      post.authorId !== user.id
     ) {
       return { success: false, error: 'Sem permissão para excluir este post' }
     }

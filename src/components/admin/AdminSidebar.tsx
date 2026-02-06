@@ -23,6 +23,8 @@ interface AdminSidebarProps {
     displayName: string
     role: string
   }
+  isCollapsed: boolean
+  onToggleCollapse: () => void
 }
 
 const menuItems = [
@@ -68,9 +70,8 @@ const menuItems = [
   },
 ]
 
-export function AdminSidebar({ user }: AdminSidebarProps) {
+export function AdminSidebar({ user, isCollapsed, onToggleCollapse }: AdminSidebarProps) {
   const pathname = usePathname()
-  const [isCollapsed, setIsCollapsed] = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
 
   const isActive = (href: string) => {
@@ -110,26 +111,34 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
         }`}
       >
         <div className={styles.header}>
-          <Link href="/admin" className={styles.logo}>
-            {isCollapsed ? (
-              <span className={styles.logoIcon}>P</span>
-            ) : (
-              <Image
-                src="/images/prof_amr_logo.png"
-                alt="Prof. AMR"
-                width={100}
-                height={40}
-                className={styles.logoImage}
-              />
-            )}
-          </Link>
-          <button
-            className={styles.collapseBtn}
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            aria-label={isCollapsed ? 'Expandir menu' : 'Recolher menu'}
-          >
-            <ChevronLeft size={18} />
-          </button>
+          {isCollapsed ? (
+            <button
+              className={styles.expandBtn}
+              onClick={onToggleCollapse}
+              aria-label="Expandir menu"
+            >
+              <ChevronLeft size={20} />
+            </button>
+          ) : (
+            <>
+              <Link href="/admin" className={styles.logo}>
+                <Image
+                  src="/images/prof_amr_logo.png"
+                  alt="Prof. AMR"
+                  width={100}
+                  height={40}
+                  className={styles.logoImage}
+                />
+              </Link>
+              <button
+                className={styles.collapseBtn}
+                onClick={onToggleCollapse}
+                aria-label="Recolher menu"
+              >
+                <ChevronLeft size={18} />
+              </button>
+            </>
+          )}
         </div>
 
         <nav className={styles.nav}>

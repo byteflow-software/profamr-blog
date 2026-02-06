@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { auth } from '@/lib/auth'
+import { getCurrentUser } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
 interface SocialLink {
@@ -19,13 +19,13 @@ interface SettingsData {
 }
 
 export async function updateSettings(data: SettingsData) {
-  const session = await auth()
-  if (!session?.user) {
+  const user = await getCurrentUser()
+  if (!user) {
     return { success: false, error: 'Não autorizado' }
   }
 
   // Only ADMIN can change settings
-  if (session.user.role !== 'ADMIN') {
+  if (user.role !== 'ADMIN') {
     return { success: false, error: 'Apenas administradores podem alterar configurações' }
   }
 

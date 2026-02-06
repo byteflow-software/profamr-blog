@@ -4,6 +4,7 @@ import { Search } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
 import { getWikiTreeData } from '@/lib/wiki'
 import { WikiSidebar } from '@/components/wiki/WikiSidebar'
+import { WikiGraphButton } from '@/components/wiki/WikiGraphButton'
 import styles from './page.module.css'
 
 export const metadata: Metadata = {
@@ -43,9 +44,12 @@ export default async function WikiPage() {
         {/* Header */}
         <header className={styles.header}>
           <h1 className={styles.title}>Wiki Jurídica</h1>
-          <p className={styles.description}>
-            {totalArticles} artigos sobre termos, conceitos e doutrinas jurídicas.
-          </p>
+          <div className={styles.descriptionRow}>
+            <p className={styles.description}>
+              {totalArticles} artigos sobre termos, conceitos e doutrinas jurídicas.
+            </p>
+            <WikiGraphButton categories={categories} />
+          </div>
           <form action="/wiki/busca" method="GET" className={styles.searchForm}>
             <Search className={styles.searchIcon} size={16} />
             <input

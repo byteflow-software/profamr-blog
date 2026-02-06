@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { auth } from '@/lib/auth'
+import { getCurrentUser } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { slugify } from '@/lib/utils'
 
@@ -22,8 +22,8 @@ function revalidateWikiPaths() {
 }
 
 export async function createWikiCategory(data: WikiCategoryFormData) {
-  const session = await auth()
-  if (!session?.user) {
+  const user = await getCurrentUser()
+  if (!user) {
     return { success: false, error: 'Não autorizado' }
   }
 
@@ -57,8 +57,8 @@ export async function createWikiCategory(data: WikiCategoryFormData) {
 }
 
 export async function updateWikiCategory(id: number, data: WikiCategoryFormData) {
-  const session = await auth()
-  if (!session?.user) {
+  const user = await getCurrentUser()
+  if (!user) {
     return { success: false, error: 'Não autorizado' }
   }
 
@@ -100,8 +100,8 @@ interface WikiCategoryHierarchyUpdate {
 }
 
 export async function updateWikiCategoryHierarchy(updates: WikiCategoryHierarchyUpdate[]) {
-  const session = await auth()
-  if (!session?.user) {
+  const user = await getCurrentUser()
+  if (!user) {
     return { success: false, error: 'Não autorizado' }
   }
 
@@ -161,8 +161,8 @@ export async function updateWikiCategoryHierarchy(updates: WikiCategoryHierarchy
 }
 
 export async function deleteWikiCategory(id: number) {
-  const session = await auth()
-  if (!session?.user) {
+  const user = await getCurrentUser()
+  if (!user) {
     return { success: false, error: 'Não autorizado' }
   }
 

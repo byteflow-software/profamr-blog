@@ -17,19 +17,11 @@ model User {
   createdAt        DateTime  @default(now()) @map("created_at")
   updatedAt        DateTime  @updatedAt @map("updated_at")
 
-  // Campos de autenticação
-  passwordHash     String?   @map("password_hash")
   role             UserRole  @default(AUTHOR)
-  twoFactorSecret  String?   @map("two_factor_secret")
-  twoFactorEnabled Boolean   @default(false) @map("two_factor_enabled")
-  failedAttempts   Int       @default(0) @map("failed_attempts")
-  lockedUntil      DateTime? @map("locked_until")
-  lastLoginAt      DateTime? @map("last_login_at")
-  lastLoginIp      String?   @map("last_login_ip")
 
   posts            Post[]
   wikiArticles     WikiArticle[]
-  sessions         Session[]
+  clerkMapping     ClerkUserMapping?
 
   @@map("users")
 }
@@ -40,36 +32,15 @@ enum UserRole {
   AUTHOR
 }
 
-// Sessões de usuário
-model Session {
-  id        String   @id @default(cuid())
-  userId    Int      @map("user_id")
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  token     String   @unique
-  expiresAt DateTime @map("expires_at")
-  userAgent String?  @map("user_agent")
-  ipAddress String?  @map("ip_address")
-  createdAt DateTime @default(now()) @map("created_at")
+// Mapeamento Clerk → Usuário local
+model ClerkUserMapping {
+  id          Int      @id @default(autoincrement())
+  clerkUserId String   @unique @map("clerk_user_id")
+  userId      Int      @unique @map("user_id")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now()) @map("created_at")
 
-  @@index([userId])
-  @@index([token])
-  @@map("sessions")
-}
-
-// Log de tentativas de login
-model LoginLog {
-  id        Int      @id @default(autoincrement())
-  userId    Int?     @map("user_id")
-  email     String
-  success   Boolean
-  ipAddress String   @map("ip_address")
-  userAgent String?  @map("user_agent")
-  reason    String?
-  createdAt DateTime @default(now()) @map("created_at")
-
-  @@index([email])
-  @@index([createdAt])
-  @@map("login_logs")
+  @@map("clerk_user_mappings")
 }
 
 // Posts do Blog

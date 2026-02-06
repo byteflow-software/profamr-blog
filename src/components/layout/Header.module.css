@@ -98,6 +98,7 @@
   align-items: center;
   gap: 0;
   flex: 1;
+  margin-left: calc(-1 * var(--spacing-md));
 }
 
 .navItem {

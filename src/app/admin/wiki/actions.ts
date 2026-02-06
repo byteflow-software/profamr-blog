@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { auth } from '@/lib/auth'
+import { getCurrentUser } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { slugify } from '@/lib/utils'
 
@@ -17,8 +17,8 @@ interface WikiFormData {
 }
 
 export async function createWikiArticle(data: WikiFormData) {
-  const session = await auth()
-  if (!session?.user) {
+  const user = await getCurrentUser()
+  if (!user) {
     return { success: false, error: 'Não autorizado' }
   }
 
@@ -38,7 +38,7 @@ export async function createWikiArticle(data: WikiFormData) {
         summary: data.summary,
         status: data.status,
         publishedAt: data.status === 'PUBLISHED' ? new Date() : null,
-        authorId: parseInt(session.user.id),
+        authorId: user.id,
         categoryId: data.categoryId,
         parentId: data.parentId,
         order: data.order || 0,
@@ -56,8 +56,8 @@ export async function createWikiArticle(data: WikiFormData) {
 }
 
 export async function updateWikiArticle(id: number, data: WikiFormData) {
-  const session = await auth()
-  if (!session?.user) {
+  const user = await getCurrentUser()
+  if (!user) {
     return { success: false, error: 'Não autorizado' }
   }
 
@@ -111,8 +111,8 @@ export async function updateWikiArticle(id: number, data: WikiFormData) {
 }
 
 export async function deleteWikiArticle(id: number) {
-  const session = await auth()
-  if (!session?.user) {
+  const user = await getCurrentUser()
+  if (!user) {
     return { success: false, error: 'Não autorizado' }
   }
 

@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Save, Loader2, ArrowLeft, Eye, EyeOff } from 'lucide-react'
-import { createUser, updateUser } from './actions'
+import { Save, Loader2, ArrowLeft } from 'lucide-react'
+import { updateUser } from './actions'
 import { UserRole } from '@prisma/client'
 
 interface UserFormProps {
@@ -14,20 +14,31 @@ interface UserFormProps {
     displayName: string
     role: UserRole
     bio: string | null
-    twoFactorEnabled: boolean
   }
 }
 
 export function UserForm({ user }: UserFormProps) {
   const router = useRouter()
-  const isEditing = !!user
 
-  const [email, setEmail] = useState(user?.email || '')
-  const [displayName, setDisplayName] = useState(user?.displayName || '')
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-  const [role, setRole] = useState<UserRole>(user?.role || 'AUTHOR')
-  const [bio, setBio] = useState(user?.bio || '')
+  if (!user) {
+    return (
+      <div className="admin-card">
+        <p style={{ color: 'var(--color-text-muted)' }}>
+          A criação de novos usuários é feita diretamente no painel do Clerk.
+          Após criar o usuário no Clerk, execute o script de migração para vincular ao sistema.
+        </p>
+        <Link href="/admin/usuarios" className="admin-btn admin-btn-secondary" style={{ marginTop: 'var(--spacing-md)' }}>
+          <ArrowLeft size={16} />
+          Voltar
+        </Link>
+      </div>
+    )
+  }
+
+  const [email, setEmail] = useState(user.email)
+  const [displayName, setDisplayName] = useState(user.displayName)
+  const [role, setRole] = useState<UserRole>(user.role)
+  const [bio, setBio] = useState(user.bio || '')
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
@@ -37,18 +48,13 @@ export function UserForm({ user }: UserFormProps) {
     setError('')
     setIsSubmitting(true)
 
-    const data = {
-      email,
-      displayName,
-      password: password || undefined,
-      role,
-      bio: bio || undefined,
-    }
-
     try {
-      const result = isEditing
-        ? await updateUser(user.id, data)
-        : await createUser(data)
+      const result = await updateUser(user.id, {
+        email,
+        displayName,
+        role,
+        bio: bio || undefined,
+      })
 
       if (result.success) {
         router.push('/admin/usuarios')
@@ -97,41 +103,6 @@ export function UserForm({ user }: UserFormProps) {
         </div>
 
         <div className="admin-form-group">
-          <label className="admin-form-label">
-            {isEditing ? 'Nova Senha (deixe em branco para manter)' : 'Senha *'}
-          </label>
-          <div style={{ position: 'relative' }}>
-            <input
-              type={showPassword ? 'text' : 'password'}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="admin-form-input"
-              required={!isEditing}
-              style={{ paddingRight: '2.5rem' }}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              style={{
-                position: 'absolute',
-                right: '0.75rem',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                color: 'var(--color-text-muted)',
-              }}
-            >
-              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-            </button>
-          </div>
-          <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginTop: '0.25rem' }}>
-            Mínimo 8 caracteres, incluindo maiúscula, minúscula e número
-          </p>
-        </div>
-
-        <div className="admin-form-group">
           <label className="admin-form-label">Função *</label>
           <select
             value={role}
@@ -160,15 +131,6 @@ export function UserForm({ user }: UserFormProps) {
         </div>
       </div>
 
-      {isEditing && user.twoFactorEnabled && (
-        <div className="admin-card" style={{ marginTop: 'var(--spacing-md)' }}>
-          <h2 style={{ fontSize: '1rem', marginBottom: 'var(--spacing-sm)' }}>Autenticação de Dois Fatores</h2>
-          <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
-            2FA está ativo para este usuário. Use a página de edição para desativá-lo se necessário.
-          </p>
-        </div>
-      )}
-
       <div style={{ display: 'flex', gap: 'var(--spacing-md)', marginTop: 'var(--spacing-lg)' }}>
         <Link href="/admin/usuarios" className="admin-btn admin-btn-secondary">
           <ArrowLeft size={16} />
@@ -187,7 +149,7 @@ export function UserForm({ user }: UserFormProps) {
           ) : (
             <>
               <Save size={16} />
-              {isEditing ? 'Atualizar' : 'Criar Usuário'}
+              Atualizar
             </>
           )}
         </button>

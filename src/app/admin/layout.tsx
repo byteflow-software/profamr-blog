@@ -1,6 +1,5 @@
-import { auth } from '@/lib/auth'
-import { AdminSidebar } from '@/components/admin/AdminSidebar'
-import { AdminHeader } from '@/components/admin/AdminHeader'
+import { getCurrentUser } from '@/lib/auth'
+import { AdminLayoutClient } from '@/components/admin/AdminLayoutClient'
 import './admin.css'
 
 export const metadata = {
@@ -15,18 +14,12 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
-  const session = await auth()
+  const user = await getCurrentUser()
 
   return (
     <div className="admin-layout">
-      {session ? (
-        <>
-          <AdminSidebar user={session.user} />
-          <div className="admin-main">
-            <AdminHeader user={session.user} />
-            <main className="admin-content">{children}</main>
-          </div>
-        </>
+      {user ? (
+        <AdminLayoutClient user={user}>{children}</AdminLayoutClient>
       ) : (
         <main className="admin-content-full">{children}</main>
       )}

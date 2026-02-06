@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import { Plus, Edit, Shield, ShieldCheck, User as UserIcon } from 'lucide-react'
+import { Edit, Shield, ShieldCheck, User as UserIcon } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
-import { auth } from '@/lib/auth'
+import { getCurrentUser } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { DeleteUserButton } from './DeleteUserButton'
 
@@ -13,8 +13,6 @@ async function getUsers() {
       email: true,
       displayName: true,
       role: true,
-      twoFactorEnabled: true,
-      lastLoginAt: true,
       createdAt: true,
       _count: {
         select: {
@@ -27,10 +25,9 @@ async function getUsers() {
 }
 
 export default async function UsersPage() {
-  const session = await auth()
+  const currentUser = await getCurrentUser()
 
-  // Double-check admin role (middleware already checks, but extra security)
-  if (session?.user?.role !== 'ADMIN') {
+  if (currentUser?.role !== 'ADMIN') {
     redirect('/admin')
   }
 
@@ -65,10 +62,6 @@ export default async function UsersPage() {
           <h1 className="admin-page-title">Usuários</h1>
           <p className="admin-page-subtitle">{users.length} usuário(s) cadastrado(s)</p>
         </div>
-        <Link href="/admin/usuarios/novo" className="admin-btn admin-btn-primary">
-          <Plus size={16} />
-          Novo Usuário
-        </Link>
       </div>
 
       <div className="admin-card">
@@ -78,9 +71,8 @@ export default async function UsersPage() {
               <tr>
                 <th>Usuário</th>
                 <th>Função</th>
-                <th>2FA</th>
                 <th>Conteúdo</th>
-                <th>Último Login</th>
+                <th>Criado em</th>
                 <th style={{ width: 100 }}>Ações</th>
               </tr>
             </thead>
@@ -100,13 +92,6 @@ export default async function UsersPage() {
                   </td>
                   <td>{getRoleBadge(user.role)}</td>
                   <td>
-                    {user.twoFactorEnabled ? (
-                      <span className="admin-badge admin-badge-success">Ativo</span>
-                    ) : (
-                      <span className="admin-badge admin-badge-secondary">Inativo</span>
-                    )}
-                  </td>
-                  <td>
                     <div style={{ fontSize: '0.875rem' }}>
                       <span title="Posts">{user._count.posts} posts</span>
                       {' · '}
@@ -114,15 +99,9 @@ export default async function UsersPage() {
                     </div>
                   </td>
                   <td>
-                    {user.lastLoginAt ? (
-                      <span style={{ fontSize: '0.875rem' }}>
-                        {new Date(user.lastLoginAt).toLocaleDateString('pt-BR')}
-                      </span>
-                    ) : (
-                      <span style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
-                        Nunca
-                      </span>
-                    )}
+                    <span style={{ fontSize: '0.875rem' }}>
+                      {new Date(user.createdAt).toLocaleDateString('pt-BR')}
+                    </span>
                   </td>
                   <td>
                     <div style={{ display: 'flex', gap: 'var(--spacing-xs)' }}>
@@ -137,7 +116,7 @@ export default async function UsersPage() {
                         userId={user.id}
                         userName={user.displayName}
                         contentCount={user._count.posts + user._count.wikiArticles}
-                        currentUserId={parseInt(session?.user?.id || '0')}
+                        currentUserId={currentUser.id}
                       />
                     </div>
                   </td>
