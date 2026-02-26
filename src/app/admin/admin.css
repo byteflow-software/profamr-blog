@@ -386,3 +386,58 @@
 .admin-stat-change.negative {
   color: var(--color-error);
 }
+
+/* Loading Skeleton */
+.admin-skeleton {
+  background: linear-gradient(90deg, var(--color-bg-muted) 25%, var(--color-bg-alt) 50%, var(--color-bg-muted) 75%);
+  background-size: 200% 100%;
+  animation: admin-skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-md);
+}
+
+@keyframes admin-skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.admin-skeleton-text {
+  height: 14px;
+  margin-bottom: var(--spacing-sm);
+}
+
+.admin-skeleton-title {
+  height: 20px;
+  width: 60%;
+  margin-bottom: var(--spacing-md);
+}
+
+.admin-skeleton-block {
+  height: 48px;
+  margin-bottom: var(--spacing-md);
+}
+
+/* Loading Bar */
+.admin-loading-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.admin-loading-bar::after {
+  content: '';
+  display: block;
+  height: 100%;
+  width: 40%;
+  background: var(--color-secondary);
+  border-radius: 0 var(--radius-full) var(--radius-full) 0;
+  animation: admin-loading-slide 1s ease-in-out infinite;
+}
+
+@keyframes admin-loading-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(350%); }
+}
