@@ -1,5 +1,7 @@
 .page {
   max-width: 1200px;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .quickActions {
@@ -12,6 +14,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--spacing-xl);
+  min-width: 0;
 }
 
 .viewAll {

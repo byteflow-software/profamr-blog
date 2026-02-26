@@ -3,6 +3,8 @@
   display: flex;
   min-height: 100vh;
   background: var(--color-bg-muted);
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .admin-main {
@@ -11,6 +13,8 @@
   flex-direction: column;
   margin-left: 260px;
   min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
   transition: margin-left var(--transition-normal);
 }
 
@@ -22,11 +26,15 @@
   flex: 1;
   padding: var(--spacing-xl);
   min-width: 0;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .admin-content-full {
   flex: 1;
   width: 100%;
+  overflow-x: hidden;
 }
 
 /* Responsive */
@@ -34,6 +42,30 @@
   .admin-main,
   .admin-main.admin-main-collapsed {
     margin-left: 0;
+  }
+
+  .admin-content {
+    padding: var(--spacing-lg);
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .admin-content {
+    padding: var(--spacing-md);
+  }
+
+  .admin-stat-value {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .admin-stats-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -66,6 +98,8 @@
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border-light);
   padding: var(--spacing-xl);
+  min-width: 0;
+  overflow: hidden;
 }
 
 .admin-card-header {
@@ -318,6 +352,8 @@
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border-light);
   padding: var(--spacing-lg);
+  min-width: 0;
+  overflow: hidden;
 }
 
 .admin-stat-label {
@@ -339,6 +375,8 @@
 .admin-stat-change {
   font-size: 0.75rem;
   margin-top: var(--spacing-xs);
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .admin-stat-change.positive {
