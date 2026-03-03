@@ -31,11 +31,11 @@ const NAV_ITEMS: NavItem[] = [
     slug: "tecnologias",
     href: "/blog?categoria=tecnologias",
   },
-  { name: "IAGen", slug: "iagen", href: "/blog?categoria=iagen" },
+  { name: "IAGen", slug: "ia-gen", href: "/blog?categoria=ia-gen" },
   { name: "Artigos", slug: "artigos", href: "/blog?categoria=artigos" },
   { name: "Notícias", slug: "noticias", href: "/blog?categoria=noticias" },
   {
-    name: "RoadmapCrime",
+    name: "RoadMapCrime",
     slug: "roadmapcrime",
     href: "/blog?categoria=roadmapcrime",
   },

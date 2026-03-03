@@ -14,7 +14,8 @@
       "Bash(npx next build)",
       "Bash(npx tsx:*)",
       "Bash(ls:*)",
-      "Bash(pnpm build:*)"
+      "Bash(pnpm build:*)",
+      "Bash(docker exec:*)"
     ]
   }
 }
