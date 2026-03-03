@@ -9,6 +9,7 @@ import {
   FileText,
   FolderTree,
   Tags,
+  Image as ImageIcon,
   BookOpen,
   Users,
   Settings,
@@ -47,6 +48,11 @@ const menuItems = [
     label: 'Tags',
     href: '/admin/tags',
     icon: Tags,
+  },
+  {
+    label: 'Conteúdo',
+    href: '/admin/conteudo',
+    icon: ImageIcon,
   },
   {
     label: 'Wiki',

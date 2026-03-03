@@ -21,6 +21,7 @@ model User {
 
   posts            Post[]
   wikiArticles     WikiArticle[]
+  media            Media[]
   clerkMapping     ClerkUserMapping?
 
   @@map("users")
@@ -179,6 +180,38 @@ model WikiCategory {
   wpTermId    Int?      @unique @map("wp_term_id")
 
   @@map("wiki_categories")
+}
+
+// Mídia (Biblioteca de conteúdo)
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+model Media {
+  id            Int       @id @default(autoincrement())
+  filename      String
+  originalName  String    @map("original_name")
+  url           String
+  mimeType      String    @map("mime_type")
+  size          Int
+  width         Int?
+  height        Int?
+  type          MediaType
+  title         String?
+  altText       String?   @map("alt_text")
+  caption       String?   @db.Text
+  description   String?   @db.Text
+
+  uploadedById  Int       @map("uploaded_by_id")
+  uploadedBy    User      @relation(fields: [uploadedById], references: [id])
+
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  @@index([type])
+  @@index([createdAt])
+  @@map("media")
 }
 
 // Configurações do Site

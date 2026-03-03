@@ -15,7 +15,9 @@
       "Bash(npx tsx:*)",
       "Bash(ls:*)",
       "Bash(pnpm build:*)",
-      "Bash(docker exec:*)"
+      "Bash(docker exec:*)",
+      "WebFetch(domain:sharp.pixelplumbing.com)",
+      "WebFetch(domain:www.npmjs.com)"
     ]
   }
 }

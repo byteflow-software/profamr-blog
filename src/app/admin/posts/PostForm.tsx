@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Save, Eye, ArrowLeft, Loader2 } from "lucide-react";
+import { Save, Eye, ArrowLeft, Loader2, ImageIcon, X } from "lucide-react";
 import { slugify } from "@/lib/utils";
 import { createPost, updatePost } from "./actions";
 import { RichTextEditor } from "@/components/editor";
+import { MediaPickerModal } from "@/components/editor/MediaPickerModal";
 import styles from "./PostForm.module.css";
 
 interface PostFormProps {
@@ -46,6 +47,7 @@ export function PostForm({ post, categories, tags }: PostFormProps) {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [showImagePicker, setShowImagePicker] = useState(false);
 
   const handleTitleChange = (value: string) => {
     setTitle(value);
@@ -218,23 +220,58 @@ export function PostForm({ post, categories, tags }: PostFormProps) {
           {/* Featured Image */}
           <div className="admin-card">
             <h3 className={styles.sidebarTitle}>Imagem Destacada</h3>
-            <div className="admin-form-group">
-              <input
-                type="url"
-                value={featuredImage}
-                onChange={(e) => setFeaturedImage(e.target.value)}
-                className="admin-form-input"
-                placeholder="URL da imagem"
-              />
-            </div>
-            {featuredImage && (
-              <img
-                src={featuredImage}
-                alt="Preview"
-                className={styles.imagePreview}
-              />
+            {featuredImage ? (
+              <div style={{ position: "relative" }}>
+                <img
+                  src={featuredImage}
+                  alt="Preview"
+                  className={styles.imagePreview}
+                />
+                <button
+                  type="button"
+                  onClick={() => setFeaturedImage("")}
+                  style={{
+                    position: "absolute",
+                    top: 4,
+                    right: 4,
+                    background: "rgba(0,0,0,0.6)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "50%",
+                    width: 24,
+                    height: 24,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                  }}
+                  title="Remover imagem"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className="admin-btn admin-btn-secondary"
+                onClick={() => setShowImagePicker(true)}
+                style={{ width: "100%" }}
+              >
+                <ImageIcon size={16} />
+                Selecionar Imagem
+              </button>
             )}
           </div>
+
+          {showImagePicker && (
+            <MediaPickerModal
+              onSelect={(data) => {
+                setFeaturedImage(data.url);
+                setShowImagePicker(false);
+              }}
+              onClose={() => setShowImagePicker(false)}
+            />
+          )}
 
           {/* Categories */}
           <div className="admin-card">
