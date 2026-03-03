@@ -1,6 +1,6 @@
 'use client'
 
-import { Film } from 'lucide-react'
+import { Film, FileText } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
 
 interface MediaItem {
@@ -28,7 +28,9 @@ export function MediaCard({ media, onClick }: MediaCardProps) {
   return (
     <div className="media-card" onClick={onClick}>
       <div className="media-card-thumb">
-        {media.type === 'IMAGE' ? (
+        {media.mimeType === 'application/pdf' ? (
+          <FileText size={40} className="media-card-video-icon" />
+        ) : media.type === 'IMAGE' ? (
           <img src={media.url} alt={media.filename} loading="lazy" />
         ) : (
           <Film size={40} className="media-card-video-icon" />

@@ -18,10 +18,19 @@ export const metadata: Metadata = {
     "wiki jurídica",
   ],
   authors: [{ name: "Prof. AMR" }],
+  icons: {
+    icon: "/favicon.ico",
+  },
   openGraph: {
     type: "website",
     locale: "pt_BR",
     siteName: "Prof. AMR - Direito & Artigos",
+    images: [
+      {
+        url: "/images/prof_amr_logo.png",
+        alt: "Prof. AMR - Direito & Artigos",
+      },
+    ],
   },
 };
 

@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
 
   const { searchParams } = new URL(request.url)
   const type = searchParams.get('type') as MediaType | null
+  const mime = searchParams.get('mime') || ''
   const search = searchParams.get('search') || ''
   const page = parseInt(searchParams.get('page') || '1')
   const limit = parseInt(searchParams.get('limit') || '24')
@@ -18,6 +19,7 @@ export async function GET(request: NextRequest) {
 
   const where = {
     ...(type && { type }),
+    ...(mime && { mimeType: { contains: mime, mode: 'insensitive' as const } }),
     ...(search && {
       OR: [
         { filename: { contains: search, mode: 'insensitive' as const } },

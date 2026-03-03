@@ -254,6 +254,23 @@ a:hover {
   font-weight: 600;
 }
 
+/* Hide WordPress legacy footer elements inside post content */
+.prose #ver_comentarios,
+.prose #comment_wrapper,
+.prose .actions.bottom,
+.prose .addtoany_shortcode,
+.prose .a2a_kit,
+.prose .report,
+.prose .ad,
+.prose .right.height-apply,
+.prose .pp-multiple-authors-boxes-wrapper,
+.prose .pp-multiple-authors-boxes-li,
+.prose > style,
+.prose .tags,
+.prose .share {
+  display: none !important;
+}
+
 /* Animações */
 @keyframes fadeIn {
   from {

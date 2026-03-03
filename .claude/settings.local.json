@@ -17,7 +17,10 @@
       "Bash(pnpm build:*)",
       "Bash(docker exec:*)",
       "WebFetch(domain:sharp.pixelplumbing.com)",
-      "WebFetch(domain:www.npmjs.com)"
+      "WebFetch(domain:www.npmjs.com)",
+      "Bash(docker:*)",
+      "Bash(MSYS_NO_PATHCONV=1 docker exec:*)",
+      "Bash(mkdir:*)"
     ]
   }
 }

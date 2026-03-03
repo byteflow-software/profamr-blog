@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Search, ImageIcon, Film, LayoutGrid, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Search, ImageIcon, Film, FileText, LayoutGrid, ChevronLeft, ChevronRight } from 'lucide-react'
 import { UploadZone } from './UploadZone'
 import { MediaCard } from './MediaCard'
 import { MediaEditModal } from './MediaEditModal'
@@ -37,7 +37,7 @@ export function MediaLibrary() {
   const [total, setTotal] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
   const [page, setPage] = useState(1)
-  const [typeFilter, setTypeFilter] = useState<'all' | 'IMAGE' | 'VIDEO'>('all')
+  const [typeFilter, setTypeFilter] = useState<'all' | 'IMAGE' | 'VIDEO' | 'PDF'>('all')
   const [search, setSearch] = useState('')
   const [searchDebounced, setSearchDebounced] = useState('')
   const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null)
@@ -56,7 +56,11 @@ export function MediaLibrary() {
         page: String(page),
         limit: '24',
       })
-      if (typeFilter !== 'all') params.set('type', typeFilter)
+      if (typeFilter === 'PDF') {
+        params.set('mime', 'application/pdf')
+      } else if (typeFilter !== 'all') {
+        params.set('type', typeFilter)
+      }
       if (searchDebounced) params.set('search', searchDebounced)
 
       const res = await fetch(`/api/media?${params}`)
@@ -128,6 +132,13 @@ export function MediaLibrary() {
           >
             <Film size={14} style={{ marginRight: '4px', verticalAlign: 'middle' }} />
             Vídeos
+          </button>
+          <button
+            className={`media-tab ${typeFilter === 'PDF' ? 'media-tab-active' : ''}`}
+            onClick={() => setTypeFilter('PDF')}
+          >
+            <FileText size={14} style={{ marginRight: '4px', verticalAlign: 'middle' }} />
+            PDFs
           </button>
         </div>
 

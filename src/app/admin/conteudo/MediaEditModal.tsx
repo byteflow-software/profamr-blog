@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { X, Trash2, Save, Loader2, Film } from 'lucide-react'
+import { X, Trash2, Save, Loader2, Film, FileText, Maximize2 } from 'lucide-react'
 
 interface MediaItem {
   id: number
@@ -36,6 +36,7 @@ export function MediaEditModal({ media, onClose, onSave, onDelete }: MediaEditMo
   const [description, setDescription] = useState(media.description || '')
   const [isSaving, setIsSaving] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [isFullscreen, setIsFullscreen] = useState(false)
 
   const handleSave = async () => {
     setIsSaving(true)
@@ -80,8 +81,14 @@ export function MediaEditModal({ media, onClose, onSave, onDelete }: MediaEditMo
         </div>
 
         <div className="media-modal-body">
-          <div className="media-modal-preview">
-            {media.type === 'IMAGE' ? (
+          <div className="media-modal-preview" style={{ position: 'relative' }}>
+            {media.mimeType === 'application/pdf' ? (
+              <iframe
+                src={media.url}
+                title={media.filename}
+                style={{ width: '100%', height: '320px', border: 'none' }}
+              />
+            ) : media.type === 'IMAGE' ? (
               <img src={media.url} alt={media.filename} />
             ) : (
               <div style={{ padding: '40px', textAlign: 'center' }}>
@@ -91,6 +98,28 @@ export function MediaEditModal({ media, onClose, onSave, onDelete }: MediaEditMo
                 </p>
               </div>
             )}
+            <button
+              type="button"
+              onClick={() => setIsFullscreen(true)}
+              style={{
+                position: 'absolute',
+                top: 8,
+                right: 8,
+                background: 'rgba(0,0,0,0.6)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                width: 32,
+                height: 32,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+              }}
+              title="Tela cheia"
+            >
+              <Maximize2 size={16} />
+            </button>
             {media.width && media.height && (
               <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', padding: '8px', textAlign: 'center' }}>
                 {media.width} × {media.height}px
@@ -176,6 +205,81 @@ export function MediaEditModal({ media, onClose, onSave, onDelete }: MediaEditMo
           </div>
         </div>
       </div>
+
+      {/* Fullscreen overlay */}
+      {isFullscreen && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.9)',
+            zIndex: 2000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          onClick={() => setIsFullscreen(false)}
+        >
+          <button
+            onClick={() => setIsFullscreen(false)}
+            style={{
+              position: 'absolute',
+              top: 16,
+              right: 16,
+              background: 'rgba(255,255,255,0.15)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              width: 40,
+              height: 40,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              zIndex: 2001,
+            }}
+            title="Fechar (Esc)"
+          >
+            <X size={24} />
+          </button>
+          {media.mimeType === 'application/pdf' ? (
+            <iframe
+              src={media.url}
+              title={media.filename}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                width: '90vw',
+                height: '90vh',
+                border: 'none',
+                borderRadius: '8px',
+              }}
+            />
+          ) : media.type === 'IMAGE' ? (
+            <img
+              src={media.url}
+              alt={media.filename}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                maxWidth: '95vw',
+                maxHeight: '95vh',
+                objectFit: 'contain',
+                borderRadius: '8px',
+              }}
+            />
+          ) : (
+            <video
+              src={media.url}
+              controls
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                maxWidth: '95vw',
+                maxHeight: '95vh',
+                borderRadius: '8px',
+              }}
+            />
+          )}
+        </div>
+      )}
     </div>
   )
 }

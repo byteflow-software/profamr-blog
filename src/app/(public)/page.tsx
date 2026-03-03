@@ -18,10 +18,11 @@ async function getFeaturedPost() {
   });
 }
 
-async function getPopularPosts() {
+async function getRecentPosts() {
   return prisma.post.findMany({
     where: { status: "PUBLISHED" },
-    orderBy: { viewCount: "desc" },
+    orderBy: { publishedAt: "desc" },
+    skip: 1, // skip featured post
     take: 6,
     include: {
       author: { select: { displayName: true } },
@@ -44,9 +45,9 @@ async function getLatestWikiArticles() {
 }
 
 export default async function HomePage() {
-  const [featuredPost, popularPosts, wikiArticles] = await Promise.all([
+  const [featuredPost, recentPosts, wikiArticles] = await Promise.all([
     getFeaturedPost(),
-    getPopularPosts(),
+    getRecentPosts(),
     getLatestWikiArticles(),
   ]);
 
@@ -62,16 +63,16 @@ export default async function HomePage() {
             </section>
           )}
 
-          {/* Popular Posts */}
+          {/* Recent Posts */}
           <section className={styles.section}>
             <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle}>Populares</h2>
+              <h2 className={styles.sectionTitle}>Recentes</h2>
               <Link href="/blog" className={styles.viewAll}>
                 Ver todos <ArrowRight size={14} />
               </Link>
             </div>
             <div className={styles.postsGrid}>
-              {popularPosts.map((post) => (
+              {recentPosts.map((post) => (
                 <PostCard key={post.id} post={post} />
               ))}
             </div>
