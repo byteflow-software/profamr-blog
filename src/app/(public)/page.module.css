@@ -12,6 +12,10 @@
   align-items: start;
 }
 
+.pageLayoutFull {
+  grid-template-columns: 1fr;
+}
+
 .mainContent {
   min-width: 0;
 }

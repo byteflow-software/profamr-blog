@@ -54,7 +54,7 @@ export default async function HomePage() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.pageLayout}>
+      <div className={`${styles.pageLayout} ${!showPodcast ? styles.pageLayoutFull : ''}`}>
         {/* Main Content */}
         <main className={styles.mainContent}>
           {/* Featured Post */}
@@ -110,9 +110,11 @@ export default async function HomePage() {
         </main>
 
         {/* Sidebar - Desktop */}
-        <aside className={styles.sidebar}>
-          {showPodcast && <PodcastSidebar />}
-        </aside>
+        {showPodcast && (
+          <aside className={styles.sidebar}>
+            <PodcastSidebar />
+          </aside>
+        )}
       </div>
 
       {/* Podcast Banner - Mobile */}
