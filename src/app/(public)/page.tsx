@@ -45,6 +45,7 @@ async function getLatestWikiArticles() {
 }
 
 export default async function HomePage() {
+  const showPodcast = process.env.NEXT_PUBLIC_SHOW_PODCAST === "true";
   const [featuredPost, recentPosts, wikiArticles] = await Promise.all([
     getFeaturedPost(),
     getRecentPosts(),
@@ -110,14 +111,16 @@ export default async function HomePage() {
 
         {/* Sidebar - Desktop */}
         <aside className={styles.sidebar}>
-          <PodcastSidebar />
+          {showPodcast && <PodcastSidebar />}
         </aside>
       </div>
 
       {/* Podcast Banner - Mobile */}
-      <div className={styles.mobilePodcastBanner}>
-        <PodcastSidebar />
-      </div>
+      {showPodcast && (
+        <div className={styles.mobilePodcastBanner}>
+          <PodcastSidebar />
+        </div>
+      )}
     </div>
   );
 }
