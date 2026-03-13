@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
 import { CategoryForm } from '../CategoryForm'
+import { CategoryEditTutorial } from '@/components/admin/tutorial/tutorials/category-edit-tutorial'
 
 interface EditCategoryPageProps {
   params: Promise<{ id: string }>
@@ -45,7 +46,7 @@ export default async function EditCategoryPage({ params }: EditCategoryPageProps
         </div>
       </div>
 
-      <div className="admin-card">
+      <div className="admin-card" data-tutorial="cat-edit-form">
         <CategoryForm category={category} categories={categories} />
       </div>
 
@@ -55,6 +56,7 @@ export default async function EditCategoryPage({ params }: EditCategoryPageProps
           Voltar
         </Link>
       </div>
+      <CategoryEditTutorial />
     </div>
   )
 }

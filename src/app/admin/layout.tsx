@@ -2,6 +2,7 @@ import { getCurrentUser } from '@/lib/auth'
 import { AdminLayoutClient } from '@/components/admin/AdminLayoutClient'
 import './admin.css'
 import 'katex/dist/katex.min.css'
+import '@/components/admin/tutorial/tutorial.css'
 
 export const metadata = {
   title: {

@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { PostForm } from '../PostForm'
+import { PostNewTutorial } from '@/components/admin/tutorial/tutorials/post-new-tutorial'
 
 async function getCategories() {
   return prisma.category.findMany({
@@ -31,6 +32,7 @@ export default async function NewPostPage() {
       </div>
 
       <PostForm categories={categories} tags={tags} />
+      <PostNewTutorial />
     </div>
   )
 }

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
+import { PostsListTutorial } from '@/components/admin/tutorial/tutorials/posts-list-tutorial'
 import { Plus, Pencil, ExternalLink, ChevronUp, ChevronDown, ChevronsUpDown, ChevronLeft, ChevronRight } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
 import { DeletePostButton } from './DeletePostButton'
@@ -142,7 +143,7 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
           <h1 className="admin-page-title">Posts</h1>
           <p className="admin-page-subtitle">{total} posts encontrados</p>
         </div>
-        <Link href="/admin/posts/novo" className="admin-btn admin-btn-primary">
+        <Link href="/admin/posts/novo" className="admin-btn admin-btn-primary" data-tutorial="posts-new-btn">
           <Plus size={16} />
           Novo Post
         </Link>
@@ -150,7 +151,7 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
 
       {/* Filters */}
       <div className={styles.filters}>
-        <div className={styles.tabs}>
+        <div className={styles.tabs} data-tutorial="posts-filter-tabs">
           <Link
             href="/admin/posts"
             className={`${styles.tab} ${status === 'all' ? styles.tabActive : ''}`}
@@ -171,7 +172,7 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
           </Link>
         </div>
 
-        <form className={styles.search}>
+        <form className={styles.search} data-tutorial="posts-search">
           <input
             type="search"
             name="q"
@@ -183,7 +184,7 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
       </div>
 
       {/* Table */}
-      <div className="admin-card">
+      <div className="admin-card" data-tutorial="posts-table">
         {posts.length === 0 ? (
           <div className="admin-empty">
             <p className="admin-empty-text">Nenhum post encontrado.</p>
@@ -277,7 +278,7 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
 
         {/* Pagination */}
         {pages > 1 && (
-          <div className={styles.pagination}>
+          <div className={styles.pagination} data-tutorial="posts-pagination">
             <Link
               href={pageHref(Math.max(1, page - 1))}
               className={`${styles.pageLink} ${styles.pageNav} ${page <= 1 ? styles.pageDisabled : ''}`}
@@ -312,6 +313,7 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
           </div>
         )}
       </div>
+      <PostsListTutorial />
     </div>
   )
 }

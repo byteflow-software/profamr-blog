@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Edit, Shield, ShieldCheck, User as UserIcon } from 'lucide-react'
+import { UsersTutorial } from '@/components/admin/tutorial/tutorials/users-tutorial'
 import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth'
 import { redirect } from 'next/navigation'
@@ -64,7 +65,7 @@ export default async function UsersPage() {
         </div>
       </div>
 
-      <div className="admin-card">
+      <div className="admin-card" data-tutorial="users-table">
         <div className="admin-table-container">
           <table className="admin-table">
             <thead>
@@ -126,6 +127,7 @@ export default async function UsersPage() {
           </table>
         </div>
       </div>
+      <UsersTutorial />
     </div>
   )
 }

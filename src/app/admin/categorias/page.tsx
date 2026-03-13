@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { CategoriesTutorial } from '@/components/admin/tutorial/tutorials/categories-tutorial'
 import { CategoryForm } from './CategoryForm'
 import { CategoryTree } from './CategoryTree'
 import styles from './page.module.css'
@@ -27,17 +28,18 @@ export default async function CategoriesPage() {
 
       <div className={styles.layout}>
         {/* Form */}
-        <div className="admin-card">
+        <div className="admin-card" data-tutorial="category-form">
           <h2 className={styles.cardTitle}>Nova Categoria</h2>
           <CategoryForm categories={categories} />
         </div>
 
         {/* Tree */}
-        <div className="admin-card">
+        <div className="admin-card" data-tutorial="category-tree">
           <h2 className={styles.cardTitle}>Hierarquia de Categorias</h2>
           <CategoryTree categories={categories} />
         </div>
       </div>
+      <CategoriesTutorial />
     </div>
   )
 }

@@ -108,10 +108,12 @@ export function MediaLibrary() {
         </div>
       </div>
 
-      <UploadZone onUploadComplete={handleUploadComplete} />
+      <div data-tutorial="media-upload">
+        <UploadZone onUploadComplete={handleUploadComplete} />
+      </div>
 
       <div className="media-filters">
-        <div className="media-tabs">
+        <div className="media-tabs" data-tutorial="media-type-filters">
           <button
             className={`media-tab ${typeFilter === 'all' ? 'media-tab-active' : ''}`}
             onClick={() => setTypeFilter('all')}
@@ -142,7 +144,7 @@ export function MediaLibrary() {
           </button>
         </div>
 
-        <div className="media-search">
+        <div className="media-search" data-tutorial="media-search">
           <Search size={16} style={{ color: 'var(--color-text-muted)' }} />
           <input
             type="text"
@@ -175,7 +177,7 @@ export function MediaLibrary() {
         </div>
       ) : (
         <>
-          <div className="media-grid" style={{ marginTop: 'var(--spacing-lg)' }}>
+          <div className="media-grid" data-tutorial="media-grid" style={{ marginTop: 'var(--spacing-lg)' }}>
             {media.map((item) => (
               <MediaCard
                 key={item.id}

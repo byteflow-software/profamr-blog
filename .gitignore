@@ -46,3 +46,7 @@ coverage/
 *.tsbuildinfo
 next-env.d.ts
 backup-database/db_dom221839.sql
+/.claude
+/.specify
+/specs
+CLAUDE.md

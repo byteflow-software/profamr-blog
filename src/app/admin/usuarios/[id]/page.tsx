@@ -2,6 +2,7 @@ import { notFound, redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth'
 import { UserForm } from '../UserForm'
+import { UserEditTutorial } from '@/components/admin/tutorial/tutorials/user-edit-tutorial'
 
 interface EditUserPageProps {
   params: Promise<{ id: string }>
@@ -53,7 +54,7 @@ export default async function EditUserPage({ params }: EditUserPageProps) {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 'var(--spacing-lg)', alignItems: 'start' }}>
-        <div>
+        <div data-tutorial="user-edit-form">
           <UserForm user={user} />
         </div>
 
@@ -80,6 +81,7 @@ export default async function EditUserPage({ params }: EditUserPageProps) {
           </div>
         </div>
       </div>
+      <UserEditTutorial />
     </div>
   )
 }

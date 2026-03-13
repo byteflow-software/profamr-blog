@@ -1,6 +1,7 @@
 import { getCurrentUser } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
+import { ProfileTutorial } from '@/components/admin/tutorial/tutorials/profile-tutorial'
 import { ProfileForm } from './ProfileForm'
 
 async function getUser(id: number) {
@@ -53,12 +54,12 @@ export default async function ProfilePage() {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 'var(--spacing-lg)', alignItems: 'start' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)' }} data-tutorial="profile-form">
           <ProfileForm user={user} />
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
-          <div className="admin-card">
+          <div className="admin-card" data-tutorial="profile-stats">
             <h3 style={{ fontSize: '0.875rem', marginBottom: 'var(--spacing-md)' }}>Estatísticas</h3>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-md)' }}>
@@ -87,6 +88,7 @@ export default async function ProfilePage() {
           </div>
         </div>
       </div>
+      <ProfileTutorial />
     </div>
   )
 }

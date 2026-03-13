@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
+import { WikiCategoriesTutorial } from '@/components/admin/tutorial/tutorials/wiki-categories-tutorial'
 import { prisma } from '@/lib/prisma'
 import { WikiCategoryForm } from './WikiCategoryForm'
 import { WikiCategoryTree } from './WikiCategoryTree'
@@ -33,17 +34,18 @@ export default async function WikiCategoriesPage() {
 
       <div className={styles.layout}>
         {/* Form */}
-        <div className="admin-card">
+        <div className="admin-card" data-tutorial="wiki-category-form">
           <h2 className={styles.cardTitle}>Nova Categoria</h2>
           <WikiCategoryForm categories={categories} />
         </div>
 
         {/* Tree */}
-        <div className="admin-card">
+        <div className="admin-card" data-tutorial="wiki-category-tree">
           <h2 className={styles.cardTitle}>Hierarquia de Categorias</h2>
           <WikiCategoryTree categories={categories} />
         </div>
       </div>
+      <WikiCategoriesTutorial />
     </div>
   )
 }

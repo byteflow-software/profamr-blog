@@ -20,7 +20,9 @@
       "WebFetch(domain:www.npmjs.com)",
       "Bash(docker:*)",
       "Bash(MSYS_NO_PATHCONV=1 docker exec:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(git:*)",
+      "Bash(powershell.exe:*)"
     ]
   }
 }

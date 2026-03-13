@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { WikiForm } from '../WikiForm'
+import { WikiEditTutorial } from '@/components/admin/tutorial/tutorials/wiki-edit-tutorial'
 
 interface EditWikiPageProps {
   params: Promise<{ id: string }>
@@ -66,6 +67,7 @@ export default async function EditWikiPage({ params }: EditWikiPageProps) {
         categories={categories}
         articles={articles}
       />
+      <WikiEditTutorial />
     </div>
   )
 }

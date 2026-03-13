@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { AdminSidebar } from './AdminSidebar'
 import { AdminHeader } from './AdminHeader'
+import { TutorialProvider } from './tutorial/tutorial-provider'
 
 interface AdminLayoutClientProps {
   user: {
@@ -20,7 +21,7 @@ export function AdminLayoutClient({ user, children }: AdminLayoutClientProps) {
   const [isCollapsed, setIsCollapsed] = useState(false)
 
   return (
-    <>
+    <TutorialProvider>
       <AdminSidebar
         user={user}
         isCollapsed={isCollapsed}
@@ -30,6 +31,6 @@ export function AdminLayoutClient({ user, children }: AdminLayoutClientProps) {
         <AdminHeader user={user} />
         <main className="admin-content">{children}</main>
       </div>
-    </>
+    </TutorialProvider>
   )
 }

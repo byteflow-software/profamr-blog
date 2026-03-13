@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { WikiForm } from '../WikiForm'
+import { WikiNewTutorial } from '@/components/admin/tutorial/tutorials/wiki-new-tutorial'
 
 async function getCategories() {
   return prisma.wikiCategory.findMany({
@@ -31,6 +32,7 @@ export default async function NewWikiPage() {
       </div>
 
       <WikiForm categories={categories} articles={articles} />
+      <WikiNewTutorial />
     </div>
   )
 }

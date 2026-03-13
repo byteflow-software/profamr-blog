@@ -102,7 +102,7 @@ export function WikiForm({ article, categories, articles }: WikiFormProps) {
           <div className="admin-card">
             {error && <div className={styles.error}>{error}</div>}
 
-            <div className="admin-form-group">
+            <div className="admin-form-group" data-tutorial="wiki-title">
               <label className="admin-form-label">Título</label>
               <input
                 type="text"
@@ -127,7 +127,7 @@ export function WikiForm({ article, categories, articles }: WikiFormProps) {
               </span>
             </div>
 
-            <div className="admin-form-group">
+            <div className="admin-form-group" data-tutorial="wiki-summary">
               <label className="admin-form-label">Resumo</label>
               <textarea
                 value={summary}
@@ -138,7 +138,7 @@ export function WikiForm({ article, categories, articles }: WikiFormProps) {
               />
             </div>
 
-            <div className="admin-form-group">
+            <div className="admin-form-group" data-tutorial="wiki-editor">
               <label className="admin-form-label">Conteúdo</label>
               <RichTextEditor
                 content={content}
@@ -155,7 +155,7 @@ export function WikiForm({ article, categories, articles }: WikiFormProps) {
           <div className="admin-card">
             <h3 className={styles.sidebarTitle}>Publicar</h3>
 
-            <div className="admin-form-group">
+            <div className="admin-form-group" data-tutorial="wiki-status">
               <label className="admin-form-label">Status</label>
               <select
                 value={status}
@@ -174,6 +174,7 @@ export function WikiForm({ article, categories, articles }: WikiFormProps) {
                 type="submit"
                 className="admin-btn admin-btn-primary"
                 disabled={isSubmitting}
+                data-tutorial="wiki-save"
               >
                 {isSubmitting ? (
                   <>
@@ -191,7 +192,7 @@ export function WikiForm({ article, categories, articles }: WikiFormProps) {
           </div>
 
           {/* Category */}
-          <div className="admin-card">
+          <div className="admin-card" data-tutorial="wiki-category">
             <h3 className={styles.sidebarTitle}>Categoria</h3>
             <select
               value={categoryId || ""}
@@ -213,7 +214,7 @@ export function WikiForm({ article, categories, articles }: WikiFormProps) {
           <div className="admin-card">
             <h3 className={styles.sidebarTitle}>Hierarquia</h3>
 
-            <div className="admin-form-group">
+            <div className="admin-form-group" data-tutorial="wiki-parent">
               <label className="admin-form-label">Artigo Pai</label>
               <select
                 value={parentId || ""}

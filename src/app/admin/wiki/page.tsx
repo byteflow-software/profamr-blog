@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { WikiListTutorial } from '@/components/admin/tutorial/tutorials/wiki-list-tutorial';
 import { Plus, Pencil, ExternalLink, ChevronUp, ChevronDown, ChevronsUpDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { DeleteWikiButton } from "./DeleteWikiButton";
@@ -149,10 +150,11 @@ export default async function WikiPage({ searchParams }: WikiPageProps) {
           <Link
             href="/admin/wiki/categorias"
             className="admin-btn admin-btn-secondary"
+            data-tutorial="wiki-categories-link"
           >
             Categorias
           </Link>
-          <Link href="/admin/wiki/novo" className="admin-btn admin-btn-primary">
+          <Link href="/admin/wiki/novo" className="admin-btn admin-btn-primary" data-tutorial="wiki-new-btn">
             <Plus size={16} />
             Novo Artigo
           </Link>
@@ -161,7 +163,7 @@ export default async function WikiPage({ searchParams }: WikiPageProps) {
 
       {/* Filters */}
       <div className={styles.filters}>
-        <div className={styles.tabs}>
+        <div className={styles.tabs} data-tutorial="wiki-filter-tabs">
           <Link
             href="/admin/wiki"
             className={`${styles.tab} ${status === "all" ? styles.tabActive : ""}`}
@@ -189,7 +191,7 @@ export default async function WikiPage({ searchParams }: WikiPageProps) {
       </div>
 
       {/* Table */}
-      <div className="admin-card">
+      <div className="admin-card" data-tutorial="wiki-table">
         {articles.length === 0 ? (
           <div className="admin-empty">
             <p className="admin-empty-text">Nenhum artigo encontrado.</p>
@@ -318,6 +320,7 @@ export default async function WikiPage({ searchParams }: WikiPageProps) {
           </div>
         )}
       </div>
+      <WikiListTutorial />
     </div>
   );
 }

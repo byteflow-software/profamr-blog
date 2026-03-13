@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { SettingsTutorial } from '@/components/admin/tutorial/tutorials/settings-tutorial'
 import { SettingsForm } from './SettingsForm'
 
 async function getSettings() {
@@ -31,6 +32,7 @@ export default async function SettingsPage() {
       </div>
 
       <SettingsForm settings={settings} />
+      <SettingsTutorial />
     </div>
   )
 }

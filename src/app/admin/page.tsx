@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { DashboardTutorial } from '@/components/admin/tutorial/tutorials/dashboard-tutorial'
 import { prisma } from '@/lib/prisma'
 import {
   FileText,
@@ -97,7 +98,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Stats */}
-      <div className="admin-stats-grid">
+      <div className="admin-stats-grid" data-tutorial="stat-cards">
         <div className="admin-stat-card">
           <div className="admin-stat-label">Total de Posts</div>
           <div className="admin-stat-value">{stats.totalPosts}</div>
@@ -134,7 +135,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className={styles.quickActions}>
+      <div className={styles.quickActions} data-tutorial="quick-actions">
         <Link href="/admin/posts/novo" className="admin-btn admin-btn-primary">
           <Plus size={16} />
           Novo Post
@@ -148,7 +149,7 @@ export default async function AdminDashboard() {
       {/* Recent Content */}
       <div className={styles.recentGrid}>
         {/* Recent Posts */}
-        <div className="admin-card">
+        <div className="admin-card" data-tutorial="recent-posts">
           <div className="admin-card-header">
             <h2 className="admin-card-title">
               <FileText size={16} />
@@ -192,7 +193,7 @@ export default async function AdminDashboard() {
         </div>
 
         {/* Recent Wiki Articles */}
-        <div className="admin-card">
+        <div className="admin-card" data-tutorial="recent-wiki">
           <div className="admin-card-header">
             <h2 className="admin-card-title">
               <BookOpen size={16} />
@@ -235,6 +236,8 @@ export default async function AdminDashboard() {
           )}
         </div>
       </div>
+
+      <DashboardTutorial />
     </div>
   )
 }

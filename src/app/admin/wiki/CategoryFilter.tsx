@@ -30,6 +30,7 @@ export function CategoryFilter({
       style={{ maxWidth: 200 }}
       defaultValue={currentCategory || ""}
       onChange={(e) => handleChange(e.target.value)}
+      data-tutorial="wiki-category-filter"
     >
       <option value="">Todas categorias</option>
       {categories.map((cat) => (

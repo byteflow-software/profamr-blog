@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { PostForm } from '../PostForm'
+import { PostEditTutorial } from '@/components/admin/tutorial/tutorials/post-edit-tutorial'
 
 interface EditPostPageProps {
   params: Promise<{ id: string }>
@@ -72,6 +73,7 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
         categories={categories}
         tags={tags}
       />
+      <PostEditTutorial />
     </div>
   )
 }

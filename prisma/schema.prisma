@@ -23,6 +23,7 @@ model User {
   wikiArticles     WikiArticle[]
   media            Media[]
   clerkMapping     ClerkUserMapping?
+  tutorialProgress TutorialProgress[]
 
   @@map("users")
 }
@@ -212,6 +213,19 @@ model Media {
   @@index([type])
   @@index([createdAt])
   @@map("media")
+}
+
+// Progresso do Tutorial
+model TutorialProgress {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @map("user_id")
+  pageId      String   @map("page_id")
+  completedAt DateTime @default(now()) @map("completed_at")
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, pageId])
+  @@map("tutorial_progress")
 }
 
 // Configurações do Site

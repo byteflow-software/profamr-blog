@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { TagsTutorial } from '@/components/admin/tutorial/tutorials/tags-tutorial'
 import { Pencil, Trash2 } from 'lucide-react'
 import { TagForm } from './TagForm'
 import { DeleteTagButton } from './DeleteTagButton'
@@ -27,13 +28,13 @@ export default async function TagsPage() {
 
       <div className={styles.layout}>
         {/* Form */}
-        <div className="admin-card">
+        <div className="admin-card" data-tutorial="tag-form">
           <h2 className={styles.cardTitle}>Nova Tag</h2>
           <TagForm />
         </div>
 
         {/* List */}
-        <div className="admin-card">
+        <div className="admin-card" data-tutorial="tag-list">
           <h2 className={styles.cardTitle}>Todas as Tags</h2>
 
           {tags.length === 0 ? (
@@ -60,6 +61,7 @@ export default async function TagsPage() {
           )}
         </div>
       </div>
+      <TagsTutorial />
     </div>
   )
 }

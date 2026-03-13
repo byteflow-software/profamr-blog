@@ -91,7 +91,7 @@ export function SettingsForm({ settings }: SettingsFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} data-tutorial="settings-form">
       {message && (
         <div
           className="admin-card"
@@ -189,7 +189,7 @@ export function SettingsForm({ settings }: SettingsFormProps) {
         </div>
       </div>
 
-      <div className="admin-card" style={{ marginTop: 'var(--spacing-lg)' }}>
+      <div className="admin-card" data-tutorial="settings-social" style={{ marginTop: 'var(--spacing-lg)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-md)' }}>
           <h2 style={{ fontSize: '1rem', margin: 0 }}>Redes Sociais</h2>
           <button

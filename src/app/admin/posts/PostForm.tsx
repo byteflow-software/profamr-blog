@@ -113,7 +113,7 @@ export function PostForm({ post, categories, tags }: PostFormProps) {
           <div className="admin-card">
             {error && <div className={styles.error}>{error}</div>}
 
-            <div className="admin-form-group">
+            <div className="admin-form-group" data-tutorial="post-title">
               <label className="admin-form-label">Título</label>
               <input
                 type="text"
@@ -125,7 +125,7 @@ export function PostForm({ post, categories, tags }: PostFormProps) {
               />
             </div>
 
-            <div className="admin-form-group">
+            <div className="admin-form-group" data-tutorial="post-slug">
               <label className="admin-form-label">Slug</label>
               <input
                 type="text"
@@ -140,7 +140,7 @@ export function PostForm({ post, categories, tags }: PostFormProps) {
               </span>
             </div>
 
-            <div className="admin-form-group">
+            <div className="admin-form-group" data-tutorial="post-editor">
               <label className="admin-form-label">Conteúdo</label>
               <RichTextEditor
                 content={content}
@@ -168,7 +168,7 @@ export function PostForm({ post, categories, tags }: PostFormProps) {
           <div className="admin-card">
             <h3 className={styles.sidebarTitle}>Publicar</h3>
 
-            <div className="admin-form-group">
+            <div className="admin-form-group" data-tutorial="post-status">
               <label className="admin-form-label">Status</label>
               <select
                 value={status}
@@ -190,6 +190,7 @@ export function PostForm({ post, categories, tags }: PostFormProps) {
                 type="submit"
                 className="admin-btn admin-btn-primary"
                 disabled={isSubmitting}
+                data-tutorial="post-save"
               >
                 {isSubmitting ? (
                   <>
@@ -218,7 +219,7 @@ export function PostForm({ post, categories, tags }: PostFormProps) {
           </div>
 
           {/* Featured Image */}
-          <div className="admin-card">
+          <div className="admin-card" data-tutorial="post-image">
             <h3 className={styles.sidebarTitle}>Imagem Destacada</h3>
             {featuredImage ? (
               <div style={{ position: "relative" }}>
@@ -274,7 +275,7 @@ export function PostForm({ post, categories, tags }: PostFormProps) {
           )}
 
           {/* Categories */}
-          <div className="admin-card">
+          <div className="admin-card" data-tutorial="post-categories">
             <h3 className={styles.sidebarTitle}>Categorias</h3>
             <div className={styles.checkboxList}>
               {categories.map((cat) => (
@@ -296,7 +297,7 @@ export function PostForm({ post, categories, tags }: PostFormProps) {
           </div>
 
           {/* Tags */}
-          <div className="admin-card">
+          <div className="admin-card" data-tutorial="post-tags">
             <h3 className={styles.sidebarTitle}>Tags</h3>
             <div className={styles.checkboxList}>
               {tags.map((tag) => (
