@@ -1,0 +1,232 @@
+.filterBar {
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+/* Search Input */
+.searchWrapper {
+  position: relative;
+  flex: 1;
+  min-width: 180px;
+  max-width: 280px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 6px 30px 6px 30px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  color: var(--color-text);
+  background: var(--color-bg);
+  transition: border-color var(--transition-fast);
+}
+
+.searchInput::placeholder {
+  color: var(--color-text-muted);
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 2px rgba(212, 160, 23, 0.12);
+}
+
+.clearInput {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+}
+
+.clearInput:hover {
+  color: var(--color-text);
+}
+
+/* Tag Autocomplete */
+.tagAutocomplete {
+  position: relative;
+  min-width: 160px;
+  max-width: 220px;
+  flex: 0 1 auto;
+}
+
+.tagInput {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  color: var(--color-text);
+  background: var(--color-bg);
+  transition: border-color var(--transition-fast);
+}
+
+.tagInput::placeholder {
+  color: var(--color-text-muted);
+}
+
+.tagInput:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 2px rgba(212, 160, 23, 0.12);
+}
+
+.suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  z-index: 50;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.suggestionItem {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  text-align: left;
+  font-size: 0.8125rem;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.suggestionItem:hover {
+  background-color: var(--color-bg-muted);
+  color: var(--color-secondary-dark);
+}
+
+/* Sort Toggle */
+.sortToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: none;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.sortToggle:hover {
+  color: var(--color-primary-dark);
+  border-color: var(--color-text-muted);
+}
+
+.sortActive {
+  color: var(--color-secondary-dark);
+  border-color: var(--color-secondary);
+}
+
+/* Active Filter Chips */
+.activeFilters {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border: 1px solid var(--color-secondary);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  color: var(--color-secondary-dark);
+  background: rgba(212, 160, 23, 0.08);
+}
+
+.chipLabel {
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.chipRemove {
+  display: inline-flex;
+  align-items: center;
+  background: none;
+  border: none;
+  color: var(--color-secondary-dark);
+  cursor: pointer;
+  padding: 1px;
+  border-radius: 50%;
+  transition: background-color var(--transition-fast);
+}
+
+.chipRemove:hover {
+  background-color: rgba(212, 160, 23, 0.2);
+}
+
+.clearAll {
+  background: none;
+  border: none;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 3px 4px;
+}
+
+.clearAll:hover {
+  color: var(--color-text);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .searchWrapper {
+    max-width: none;
+  }
+
+  .tagAutocomplete {
+    max-width: none;
+  }
+
+  .sortToggle {
+    align-self: flex-start;
+  }
+}

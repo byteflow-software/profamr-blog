@@ -10,7 +10,7 @@
 }
 
 .header {
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: var(--spacing-md);
 }
 
 .title {
@@ -88,18 +88,32 @@
 /* Main */
 .main {
   min-height: 400px;
+  min-width: 0;
 }
 
 .postsGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0 var(--spacing-2xl);
+  overflow: hidden;
 }
 
 .empty {
   text-align: center;
   padding: var(--spacing-3xl);
   color: var(--color-text-muted);
+}
+
+.clearFiltersLink {
+  display: inline-block;
+  margin-top: var(--spacing-md);
+  font-size: 0.875rem;
+  color: var(--color-secondary-dark);
+  text-decoration: underline;
+}
+
+.clearFiltersLink:hover {
+  color: var(--color-primary-dark);
 }
 
 /* Pagination */

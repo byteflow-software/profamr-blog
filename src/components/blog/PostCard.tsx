@@ -4,13 +4,15 @@ import { ArrowRight } from 'lucide-react'
 import { formatDate, truncate, stripHtml, estimateReadingTime } from '@/lib/utils'
 import styles from './PostCard.module.css'
 
+const MAX_VISIBLE_TAGS = 5
+
 interface PostCardProps {
   post: {
     id: number
     title: string
     slug: string
     excerpt: string | null
-    content: string
+    content?: string
     featuredImage: string | null
     publishedAt: Date | null
     author: {
@@ -22,14 +24,24 @@ interface PostCardProps {
         slug: string
       }
     }[]
+    tags?: {
+      tag: {
+        name: string
+        slug: string
+      }
+    }[]
   }
   variant?: 'default' | 'featured' | 'compact'
+  activeTagSlug?: string
 }
 
-export function PostCard({ post, variant = 'default' }: PostCardProps) {
-  const excerpt = post.excerpt || stripHtml(post.content)
-  const readingTime = estimateReadingTime(post.content)
+export function PostCard({ post, variant = 'default', activeTagSlug }: PostCardProps) {
+  const excerpt = post.excerpt || (post.content ? stripHtml(post.content) : '')
+  const readingTime = post.content ? estimateReadingTime(post.content) : Math.ceil((excerpt.split(/\s+/).length * 5) / 200)
   const category = post.categories[0]?.category
+  const tags = post.tags || []
+  const visibleTags = tags.slice(0, MAX_VISIBLE_TAGS)
+  const hiddenCount = tags.length - MAX_VISIBLE_TAGS
 
   if (variant === 'featured') {
     return (
@@ -81,6 +93,24 @@ export function PostCard({ post, variant = 'default' }: PostCardProps) {
         )}
         <h3 className={styles.cardTitle}>{post.title}</h3>
         <p className={styles.cardExcerpt}>{truncate(excerpt, 120)}</p>
+      </Link>
+      {visibleTags.length > 0 && (
+        <div className={styles.tagList}>
+          {visibleTags.map(({ tag }) => (
+            <Link
+              key={tag.slug}
+              href={`/blog?tag=${tag.slug}`}
+              className={`${styles.tagBadge} ${activeTagSlug === tag.slug ? styles.tagBadgeActive : ''}`}
+            >
+              {tag.name}
+            </Link>
+          ))}
+          {hiddenCount > 0 && (
+            <span className={styles.tagMore}>+{hiddenCount} mais</span>
+          )}
+        </div>
+      )}
+      <Link href={`/blog/${post.slug}`} className={styles.cardFooterLink}>
         <div className={styles.cardFooter}>
           <span className={styles.meta}>
             {formatDate(post.publishedAt)}

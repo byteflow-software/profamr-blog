@@ -6,6 +6,7 @@ import { Calendar, Clock, User, ChevronLeft, Share2 } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
 import { formatDate, stripHtml, estimateReadingTime } from '@/lib/utils'
 import { PostCard } from '@/components/blog/PostCard'
+import { JsonLd } from '@/components/blog/JsonLd'
 import styles from './page.module.css'
 
 interface PostPageProps {
@@ -60,16 +61,30 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
   }
 
   const excerpt = post.excerpt || stripHtml(post.content).slice(0, 160)
+  const imageUrl = post.featuredImage || '/images/prof_amr_logo.png'
 
   return {
     title: post.title,
     description: excerpt,
+    alternates: {
+      canonical: `https://profamr.app/blog/${slug}`,
+    },
     openGraph: {
       title: post.title,
       description: excerpt,
       type: 'article',
+      url: `https://profamr.app/blog/${slug}`,
+      locale: 'pt_BR',
+      siteName: 'Prof. AMR',
       publishedTime: post.publishedAt?.toISOString(),
       authors: [post.author.displayName],
+      images: [{ url: imageUrl, alt: post.title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: excerpt,
+      images: [imageUrl],
     },
   }
 }
@@ -83,17 +98,53 @@ export default async function PostPage({ params }: PostPageProps) {
   }
 
   const readingTime = estimateReadingTime(post.content)
+  const wordCount = stripHtml(post.content).split(/\s+/).length
   const categoryIds = post.categories.map((c) => c.categoryId)
   const relatedPosts = await getRelatedPosts(post.id, categoryIds)
 
-  // Incrementa visualização
-  await prisma.post.update({
+  // Fire-and-forget view count increment
+  prisma.post.update({
     where: { id: post.id },
     data: { viewCount: { increment: 1 } },
-  })
+  }).catch(() => {})
+
+  const primaryCategory = post.categories[0]?.category?.name
+  const imageUrl = post.featuredImage || '/images/prof_amr_logo.png'
+
+  const blogPostingSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: (post.excerpt || stripHtml(post.content).slice(0, 160)),
+    author: { '@type': 'Person', name: post.author.displayName },
+    datePublished: post.publishedAt?.toISOString(),
+    dateModified: post.updatedAt?.toISOString(),
+    publisher: {
+      '@type': 'Organization',
+      name: 'Prof. AMR',
+      logo: { '@type': 'ImageObject', url: 'https://profamr.app/images/prof_amr_logo.png' },
+    },
+    image: imageUrl,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `https://profamr.app/blog/${slug}` },
+    wordCount,
+    ...(primaryCategory && { articleSection: primaryCategory }),
+  }
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: 'https://profamr.app' },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://profamr.app/blog' },
+      { '@type': 'ListItem', position: 3, name: post.title },
+    ],
+  }
 
   return (
     <article className={styles.page}>
+      <JsonLd data={blogPostingSchema} />
+      <JsonLd data={breadcrumbSchema} />
+
       {/* Header */}
       <header className={styles.header}>
         <div className={styles.container}>

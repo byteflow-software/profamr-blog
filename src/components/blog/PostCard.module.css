@@ -30,7 +30,7 @@
 
 .cardLink {
   display: block;
-  padding: var(--spacing-lg) 0;
+  padding: var(--spacing-lg) 0 0;
   text-decoration: none;
 }
 
@@ -46,6 +46,8 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .card:hover .cardTitle {
@@ -61,6 +63,60 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Tag Badges */
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 0 0 var(--spacing-xs);
+}
+
+.tagBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.tagBadge:hover {
+  color: var(--color-secondary-dark);
+  border-color: var(--color-secondary);
+  background-color: rgba(212, 160, 23, 0.06);
+}
+
+.tagBadgeActive {
+  background-color: var(--color-secondary-dark);
+  border-color: var(--color-secondary-dark);
+  color: #fff;
+}
+
+.tagBadgeActive:hover {
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
+  color: #fff;
+}
+
+.tagMore {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 6px;
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+}
+
+.cardFooterLink {
+  display: block;
+  padding: 0 0 var(--spacing-lg);
+  text-decoration: none;
 }
 
 .cardFooter {
