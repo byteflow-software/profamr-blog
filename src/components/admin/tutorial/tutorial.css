@@ -94,7 +94,24 @@
 .tutorial-actions {
   margin-top: 16px;
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tutorial-dont-show {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+  color: #6b7280;
+  cursor: pointer;
+  user-select: none;
+}
+
+.tutorial-dont-show input {
+  accent-color: #d4a853;
+  cursor: pointer;
 }
 
 .tutorial-next-btn {

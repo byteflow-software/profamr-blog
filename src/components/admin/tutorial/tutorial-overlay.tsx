@@ -16,7 +16,7 @@ interface TutorialOverlayProps {
   stepIndex: number;
   totalSteps: number;
   onNext: () => void;
-  onDismiss?: () => void;
+  onDismiss?: (permanent?: boolean) => void;
   stepLabel?: string;
   nextLabel?: string;
   finishLabel?: string;
@@ -45,6 +45,7 @@ export function TutorialOverlay({
 }: TutorialOverlayProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [rect, setRect] = useState<HighlightRect | null>(null);
+  const [dontShowAgain, setDontShowAgain] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -181,7 +182,7 @@ export function TutorialOverlay({
             {onDismiss && (
               <button
                 className="tutorial-close-btn"
-                onClick={onDismiss}
+                onClick={() => onDismiss?.(dontShowAgain)}
                 aria-label="Fechar tutorial"
                 title="Fechar tutorial"
               >
@@ -195,6 +196,14 @@ export function TutorialOverlay({
           <h3 className="tutorial-title">{step.title}</h3>
           <p className="tutorial-description">{step.description}</p>
           <div className="tutorial-actions">
+            <label className="tutorial-dont-show">
+              <input
+                type="checkbox"
+                checked={dontShowAgain}
+                onChange={(e) => setDontShowAgain(e.target.checked)}
+              />
+              Não mostrar novamente
+            </label>
             <button className="tutorial-next-btn" onClick={onNext}>
               {isLastStep ? finishLabel : nextLabel}
             </button>
