@@ -205,24 +205,38 @@ export function WikiForm({ article, categories, articles }: WikiFormProps) {
                 placeholder="Buscar categoria..."
               />
             </div>
-            <select
-              value={categoryId || ""}
-              onChange={(e) =>
-                setCategoryId(e.target.value ? parseInt(e.target.value) : null)
-              }
-              className="admin-form-select"
-            >
-              <option value="">Sem categoria</option>
+            <div className={styles.checkboxList}>
+              <label className={styles.checkboxItem}>
+                <input
+                  type="radio"
+                  name="wiki-category"
+                  checked={categoryId === null}
+                  onChange={() => setCategoryId(null)}
+                />
+                <span>Sem categoria</span>
+              </label>
               {categories
                 .filter((cat) =>
                   cat.name.toLowerCase().includes(categorySearch.toLowerCase()),
                 )
                 .map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
+                  <label key={cat.id} className={styles.checkboxItem}>
+                    <input
+                      type="radio"
+                      name="wiki-category"
+                      checked={categoryId === cat.id}
+                      onChange={() => setCategoryId(cat.id)}
+                    />
+                    <span>{cat.name}</span>
+                  </label>
                 ))}
-            </select>
+              {categories.length === 0 && (
+                <p className={styles.emptyText}>
+                  Nenhuma categoria.{" "}
+                  <Link href="/admin/wiki/categorias">Criar</Link>
+                </p>
+              )}
+            </div>
           </div>
 
           {/* Hierarchy */}

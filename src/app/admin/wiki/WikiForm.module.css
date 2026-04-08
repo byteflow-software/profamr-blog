@@ -84,6 +84,42 @@
   border-color: var(--color-secondary);
 }
 
+.checkboxList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.checkboxItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) 0;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.checkboxItem:hover {
+  color: var(--color-text);
+}
+
+.checkboxItem input {
+  accent-color: var(--color-secondary);
+}
+
+.emptyText {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.emptyText a {
+  color: var(--color-secondary-dark);
+}
+
 .footer {
   padding-top: var(--spacing-lg);
   border-top: 1px solid var(--color-border-light);
