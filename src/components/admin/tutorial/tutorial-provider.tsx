@@ -44,16 +44,20 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const markAllComplete = useCallback(() => {
-    completeAllTutorials().then((result) => {
-      if (result.success) {
-        setCompletedPages(result.data);
-        try {
-          const map: Record<string, boolean> = {};
-          for (const pid of result.data) map[pid] = true;
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(map));
-        } catch {}
-      }
-    }).catch(() => {});
+    // Save to localStorage immediately so the next page load skips auto-start
+    const ALL_IDS = [
+      'dashboard', 'posts-list', 'post-new', 'post-edit',
+      'categories', 'category-edit', 'tags', 'media-library',
+      'wiki-list', 'wiki-new', 'wiki-edit', 'wiki-categories',
+      'users-list', 'user-edit', 'profile', 'settings',
+    ];
+    try {
+      const map: Record<string, boolean> = {};
+      for (const pid of ALL_IDS) map[pid] = true;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(map));
+    } catch {}
+    setCompletedPages(ALL_IDS);
+    completeAllTutorials().catch(() => {});
   }, []);
 
   return (

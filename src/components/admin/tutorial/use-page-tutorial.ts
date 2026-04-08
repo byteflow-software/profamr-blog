@@ -70,6 +70,7 @@ export function usePageTutorial({
     hasAutoStarted.current = true;
 
     const timer = setTimeout(() => {
+      if (isPageDoneLocal(pageId)) return;
       const visible = getVisibleSteps();
       if (visible.length > 0) {
         visibleStepsRef.current = visible;
