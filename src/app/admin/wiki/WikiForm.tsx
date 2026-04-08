@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Save, Eye, ArrowLeft, Loader2 } from "lucide-react";
+import { Save, Eye, ArrowLeft, Loader2, Search } from "lucide-react";
 import { slugify } from "@/lib/utils";
 import { createWikiArticle, updateWikiArticle } from "./actions";
 import { RichTextEditor } from "@/components/editor";
@@ -46,6 +46,7 @@ export function WikiForm({ article, categories, articles }: WikiFormProps) {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [categorySearch, setCategorySearch] = useState("");
 
   const handleTitleChange = (value: string) => {
     setTitle(value);
@@ -194,6 +195,16 @@ export function WikiForm({ article, categories, articles }: WikiFormProps) {
           {/* Category */}
           <div className="admin-card" data-tutorial="wiki-category">
             <h3 className={styles.sidebarTitle}>Categoria</h3>
+            <div className={styles.searchWrapper}>
+              <Search size={14} className={styles.searchIcon} />
+              <input
+                type="text"
+                value={categorySearch}
+                onChange={(e) => setCategorySearch(e.target.value)}
+                className={styles.searchInput}
+                placeholder="Buscar categoria..."
+              />
+            </div>
             <select
               value={categoryId || ""}
               onChange={(e) =>
@@ -202,11 +213,15 @@ export function WikiForm({ article, categories, articles }: WikiFormProps) {
               className="admin-form-select"
             >
               <option value="">Sem categoria</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
+              {categories
+                .filter((cat) =>
+                  cat.name.toLowerCase().includes(categorySearch.toLowerCase()),
+                )
+                .map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
             </select>
           </div>
 

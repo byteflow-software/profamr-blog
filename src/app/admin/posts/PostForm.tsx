@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Save, Eye, ArrowLeft, Loader2, ImageIcon, X } from "lucide-react";
+import { Save, Eye, ArrowLeft, Loader2, ImageIcon, X, Search } from "lucide-react";
 import { slugify } from "@/lib/utils";
 import { createPost, updatePost } from "./actions";
 import { RichTextEditor } from "@/components/editor";
@@ -48,6 +48,8 @@ export function PostForm({ post, categories, tags }: PostFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [showImagePicker, setShowImagePicker] = useState(false);
+  const [categorySearch, setCategorySearch] = useState("");
+  const [tagSearch, setTagSearch] = useState("");
 
   const handleTitleChange = (value: string) => {
     setTitle(value);
@@ -277,17 +279,31 @@ export function PostForm({ post, categories, tags }: PostFormProps) {
           {/* Categories */}
           <div className="admin-card" data-tutorial="post-categories">
             <h3 className={styles.sidebarTitle}>Categorias</h3>
+            <div className={styles.searchWrapper}>
+              <Search size={14} className={styles.searchIcon} />
+              <input
+                type="text"
+                value={categorySearch}
+                onChange={(e) => setCategorySearch(e.target.value)}
+                className={styles.searchInput}
+                placeholder="Buscar categoria..."
+              />
+            </div>
             <div className={styles.checkboxList}>
-              {categories.map((cat) => (
-                <label key={cat.id} className={styles.checkboxItem}>
-                  <input
-                    type="checkbox"
-                    checked={selectedCategories.includes(cat.id)}
-                    onChange={() => toggleCategory(cat.id)}
-                  />
-                  <span>{cat.name}</span>
-                </label>
-              ))}
+              {categories
+                .filter((cat) =>
+                  cat.name.toLowerCase().includes(categorySearch.toLowerCase()),
+                )
+                .map((cat) => (
+                  <label key={cat.id} className={styles.checkboxItem}>
+                    <input
+                      type="checkbox"
+                      checked={selectedCategories.includes(cat.id)}
+                      onChange={() => toggleCategory(cat.id)}
+                    />
+                    <span>{cat.name}</span>
+                  </label>
+                ))}
               {categories.length === 0 && (
                 <p className={styles.emptyText}>
                   Nenhuma categoria. <Link href="/admin/categorias">Criar</Link>
@@ -299,17 +315,31 @@ export function PostForm({ post, categories, tags }: PostFormProps) {
           {/* Tags */}
           <div className="admin-card" data-tutorial="post-tags">
             <h3 className={styles.sidebarTitle}>Tags</h3>
+            <div className={styles.searchWrapper}>
+              <Search size={14} className={styles.searchIcon} />
+              <input
+                type="text"
+                value={tagSearch}
+                onChange={(e) => setTagSearch(e.target.value)}
+                className={styles.searchInput}
+                placeholder="Buscar tag..."
+              />
+            </div>
             <div className={styles.checkboxList}>
-              {tags.map((tag) => (
-                <label key={tag.id} className={styles.checkboxItem}>
-                  <input
-                    type="checkbox"
-                    checked={selectedTags.includes(tag.id)}
-                    onChange={() => toggleTag(tag.id)}
-                  />
-                  <span>{tag.name}</span>
-                </label>
-              ))}
+              {tags
+                .filter((tag) =>
+                  tag.name.toLowerCase().includes(tagSearch.toLowerCase()),
+                )
+                .map((tag) => (
+                  <label key={tag.id} className={styles.checkboxItem}>
+                    <input
+                      type="checkbox"
+                      checked={selectedTags.includes(tag.id)}
+                      onChange={() => toggleTag(tag.id)}
+                    />
+                    <span>{tag.name}</span>
+                  </label>
+                ))}
               {tags.length === 0 && (
                 <p className={styles.emptyText}>
                   Nenhuma tag. <Link href="/admin/tags">Criar</Link>
