@@ -48,6 +48,48 @@ export async function completeTutorial(pageId: string) {
   }
 }
 
+const ALL_TUTORIAL_PAGE_IDS = [
+  'dashboard',
+  'posts-list',
+  'post-new',
+  'post-edit',
+  'categories',
+  'category-edit',
+  'tags',
+  'media-library',
+  'wiki-list',
+  'wiki-new',
+  'wiki-edit',
+  'wiki-categories',
+  'users-list',
+  'user-edit',
+  'profile',
+  'settings',
+];
+
+export async function completeAllTutorials() {
+  const user = await getCurrentUser()
+  if (!user) {
+    return { success: false as const, error: 'Não autorizado' }
+  }
+
+  try {
+    await Promise.all(
+      ALL_TUTORIAL_PAGE_IDS.map((pageId) =>
+        prisma.tutorialProgress.upsert({
+          where: { userId_pageId: { userId: user.id, pageId } },
+          update: { completedAt: new Date() },
+          create: { userId: user.id, pageId },
+        }),
+      ),
+    )
+    return { success: true as const, data: ALL_TUTORIAL_PAGE_IDS }
+  } catch (error) {
+    console.error('Error completing all tutorials:', error)
+    return { success: false as const, error: 'Erro ao salvar progresso' }
+  }
+}
+
 export async function resetTutorialProgress() {
   const user = await getCurrentUser()
   if (!user) {

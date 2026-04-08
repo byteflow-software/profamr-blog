@@ -104,10 +104,9 @@ export function usePageTutorial({
   const dismissTutorial = useCallback((permanent = false) => {
     setIsActive(false);
     if (permanent) {
-      markPageDoneLocal(pageId);
-      tutorialCtx?.markComplete(pageId);
+      tutorialCtx?.markAllComplete();
     }
-  }, [pageId, tutorialCtx]);
+  }, [tutorialCtx]);
 
   const visible = visibleStepsRef.current;
   const currentStep = isActive && visible.length > 0 ? visible[stepIndex] ?? null : null;

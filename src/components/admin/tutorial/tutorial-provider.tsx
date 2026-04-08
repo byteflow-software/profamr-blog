@@ -1,13 +1,14 @@
 'use client';
 
 import { createContext, useCallback, useEffect, useState } from 'react';
-import { getTutorialProgress, completeTutorial } from '@/app/admin/tutorial/actions';
+import { getTutorialProgress, completeTutorial, completeAllTutorials } from '@/app/admin/tutorial/actions';
 
 const STORAGE_KEY = 'profamr-tutorials-done';
 
 interface TutorialContextValue {
   completedPages: string[];
   markComplete: (pageId: string) => void;
+  markAllComplete: () => void;
 }
 
 export const TutorialContext = createContext<TutorialContextValue | null>(null);
@@ -39,14 +40,24 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
 
   const markComplete = useCallback((pageId: string) => {
     setCompletedPages((prev) => (prev.includes(pageId) ? prev : [...prev, pageId]));
-    // Fire and forget server sync
-    completeTutorial(pageId).catch(() => {
-      // Server sync failed, localStorage still has it
-    });
+    completeTutorial(pageId).catch(() => {});
+  }, []);
+
+  const markAllComplete = useCallback(() => {
+    completeAllTutorials().then((result) => {
+      if (result.success) {
+        setCompletedPages(result.data);
+        try {
+          const map: Record<string, boolean> = {};
+          for (const pid of result.data) map[pid] = true;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(map));
+        } catch {}
+      }
+    }).catch(() => {});
   }, []);
 
   return (
-    <TutorialContext.Provider value={{ completedPages, markComplete }}>
+    <TutorialContext.Provider value={{ completedPages, markComplete, markAllComplete }}>
       {children}
     </TutorialContext.Provider>
   );
