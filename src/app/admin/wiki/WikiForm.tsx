@@ -47,6 +47,7 @@ export function WikiForm({ article, categories, articles }: WikiFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [categorySearch, setCategorySearch] = useState("");
+  const [parentSearch, setParentSearch] = useState("");
 
   const handleTitleChange = (value: string) => {
     setTitle(value);
@@ -245,20 +246,42 @@ export function WikiForm({ article, categories, articles }: WikiFormProps) {
 
             <div className="admin-form-group" data-tutorial="wiki-parent">
               <label className="admin-form-label">Artigo Pai</label>
-              <select
-                value={parentId || ""}
-                onChange={(e) =>
-                  setParentId(e.target.value ? parseInt(e.target.value) : null)
-                }
-                className="admin-form-select"
-              >
-                <option value="">Nenhum (raiz)</option>
-                {parentOptions.map((a) => (
-                  <option key={a.id} value={a.id}>
-                    {a.title}
-                  </option>
-                ))}
-              </select>
+              <div className={styles.searchWrapper}>
+                <Search size={14} className={styles.searchIcon} />
+                <input
+                  type="text"
+                  value={parentSearch}
+                  onChange={(e) => setParentSearch(e.target.value)}
+                  className={styles.searchInput}
+                  placeholder="Buscar artigo..."
+                />
+              </div>
+              <div className={styles.checkboxList}>
+                <label className={styles.checkboxItem}>
+                  <input
+                    type="radio"
+                    name="wiki-parent"
+                    checked={parentId === null}
+                    onChange={() => setParentId(null)}
+                  />
+                  <span>Nenhum (raiz)</span>
+                </label>
+                {parentOptions
+                  .filter((a) =>
+                    a.title.toLowerCase().includes(parentSearch.toLowerCase()),
+                  )
+                  .map((a) => (
+                    <label key={a.id} className={styles.checkboxItem}>
+                      <input
+                        type="radio"
+                        name="wiki-parent"
+                        checked={parentId === a.id}
+                        onChange={() => setParentId(a.id)}
+                      />
+                      <span>{a.title}</span>
+                    </label>
+                  ))}
+              </div>
             </div>
 
             <div className="admin-form-group">
